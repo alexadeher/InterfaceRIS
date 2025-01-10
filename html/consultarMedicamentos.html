@@ -19,32 +19,32 @@
             margin: 20px 0;
         }
 
-        #tablaCategorias {
+        #tablaMeds {
             border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        #tablaCategorias thead {
+        #tablaMeds thead {
             background-color: #4723D9;
             color: #ffffff;
         }
 
-        #tablaCategorias thead th {
+        #tablaMeds thead th {
             text-align: center;
             font-weight: bold;
         }
 
-        #tablaCategorias tbody tr {
+        #tablaMeds tbody tr {
             transition: background-color 0.2s ease;
         }
 
-        #tablaCategorias tbody tr:hover {
+        #tablaMeds tbody tr:hover {
             background-color: #dce0f6d1;
         }
 
-        #tablaCategorias .btn {
+        #tablaMeds .btn {
             margin: 0 2px;
         }
 
@@ -281,14 +281,13 @@
                 <label for="buscarActivas" class="form-label">Mostrar solo categorías activas:</label>
                 <input type="checkbox" id="buscarActivas">
             </div>
-            <table id="tablaCategorias" class="display table table-striped">
+            <table id="tablaMeds" class="display table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Nombre</th>
                         <th>Descripción</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
+                        <th>Precio</th>
                     </tr>
                 </thead>
                 <tbody id="categoriasBody">
@@ -379,7 +378,7 @@
 
 
         $(document).ready(function () {
-            const tabla = $('#tablaCategorias').DataTable({
+            const tabla = $('#tablaMeds').DataTable({
                 pageLength: 6,
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
@@ -397,16 +396,16 @@
                     .then(data => {
                         if (data.result && Array.isArray(data.result)) {
                             tabla.clear();
-                            data.result.forEach((categoria, index) => {
+                            data.result.forEach((medicamentos, index) => {
                                 tabla.row.add([
                                     index + 1,
-                                    categoria.nombre,
-                                    categoria.descripcion,
-                                    categoria.status ? 'Activo' : 'Inactivo',
-                                    `<button class="btn btn-primary editar" data-id="${categoria.id}" data-nombre="${categoria.nombre}" data-descripcion="${categoria.descripcion}">
+                                    medicamentos.medicamento,
+                                    medicamentos.descripcion,
+                                    medicamentos.precio,
+                                    `<button class="btn btn-primary editar" data-id="${medicamentos.id}" data-nombre="${medicamentos.medicamento}" data-descripcion="${medicamentos.descripcion} ">
                                     <i class='bx bx-edit'></i>
                                 </button>
-                                <button class="btn btn-secondary cambiar-status" data-id="${categoria.id}">
+                                <button class="btn btn-secondary cambiar-status" data-id="${medicamentos.id}">
                                     <i class='bx bx-refresh'></i>
                                 </button>`
                                 ]).draw();
@@ -416,13 +415,13 @@
                     .catch(console.error);
             }
 
-            cargarCategorias('http://localhost:8080/categoria/all');
+            cargarCategorias('http://localhost:8080/medicamentos/all');
 
             $('#buscarActivas').on('change', function () {
                 cargarCategorias(this.checked ? 'http://localhost:8080/categoria/actives' : 'http://localhost:8080/categoria/all');
             });
 
-            $('#tablaCategorias tbody').on('click', '.cambiar-status', function () {
+            $('#tablaMeds tbody').on('click', '.cambiar-status', function () {
                 const id = $(this).data('id');
                 const estadoActual = $(this).data('estado'); // Obtener el estado actual
                 const nuevoEstado = estadoActual === 'activo' ? false : true;
@@ -546,7 +545,7 @@
             });
 
             // apertura del modal con los datos
-            document.getElementById("tablaCategorias").addEventListener("click", function (e) {
+            document.getElementById("tablaMeds").addEventListener("click", function (e) {
                 if (e.target.closest(".editar")) {
                     const button = e.target.closest(".editar");
                     const id = button.getAttribute("data-id");

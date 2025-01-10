@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Consultar Contratos</title>
+    <title>Consultar Insumos</title>
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
     <!-- Enlace al favicon -->
@@ -24,32 +24,32 @@
             margin: 20px 0;
         }
 
-        #tablaContratos {
+        #tablaInsumos {
             border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        #tablaContratos thead {
+        #tablaInsumos thead {
             background-color: #4723D9;
             color: #ffffff;
         }
 
-        #tablaContratos thead th {
+        #tablaInsumos thead th {
             text-align: center;
             font-weight: bold;
         }
 
-        #tablaContratos tbody tr {
+        #tablaInsumos tbody tr {
             transition: background-color 0.2s ease;
         }
 
-        #tablaContratos tbody tr:hover {
+        #tablaInsumos tbody tr:hover {
             background-color: #dce0f6d1;
         }
 
-        #tablaContratos .btn {
+        #tablaInsumos .btn {
             margin: 0 2px;
         }
 
@@ -283,21 +283,21 @@
     <!-- Contenido principal -->
     <div class="bg-light">
         <div class="container mt-5">
-            <h1 class="text-center">Consultar Contratos</h1>
+            <h1 class="text-center">Consultar Stock Insumos</h1>
             <div class="mb-3">
                 <label for="buscarActivas" class="form-label">Mostrar solo contratos activos:</label>
                 <input type="checkbox" id="buscarActivas">
             </div>
-            <table id="tablaContratos" class="display table table-striped">
+            <table id="tablaInsumos" class="display table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Nombre</th>
+                        <th>Medicamento</th>
                         <th>Descripción</th>
-                        <th>Fecha de Vencimiento</th>
-                        <th>Cliente</th>
-                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
                         <th>Estado</th>
+                        <th>Opciones</th>
                     </tr>
                 </thead>
                 <tbody id="contratosBody">
@@ -309,50 +309,36 @@
     <!-- Mensaje de éxito o error -->
     <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
     <!-- Modal para actualizar contrato -->
-    <div id="nuevoModalActualizarContrato" class="modal-overlay">
+    <div id="nuevoModalActualizarInsumo" class="modal-overlay">
         <div class="modal-container">
             <div class="modal-header">
-                <h5 class="modal-title">Actualizar Contrato</h5>
+                <h5 class="modal-title">Actualizar Insumo</h5>
                 <button type="button" class="btn-close" id="cerrarNuevoModal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="nuevoFormActualizarContrato">
+                <form id="nuevoFormActualizarInsumo">
                     <div class="mb-3">
-                        <label for="nuevoContratoNombre" class="form-label fw-bold">Nombre del Contrato</label>
-                        <input type="text" class="form-control" id="nuevoContratoNombre"
-                            placeholder="Escribe el nombre del contrato" required>
+                        <label for="nuevoInsumoDescripcion" class="form-label fw-bold">Descripción</label>
+                        <input type="text" class="form-control" id="nuevoInsumoDescripcion"
+                            placeholder="Escribe la descripción" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoContratoDescripcion" class="form-label fw-bold">Descripción</label>
-                        <textarea class="form-control" id="nuevoContratoDescripcion" rows="3"
-                            placeholder="Escribe una descripción" required></textarea>
+                        <label for="nuevoInsumoStock" class="form-label fw-bold">Stock</label>
+                        <input type="number" class="form-control" id="nuevoInsumoStock" placeholder="Escribe el stock"
+                            required>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoContratoFechaVencimiento" class="form-label">Fecha de vencimiento del
-                            contrato</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control datepicker" id="nuevoContratoFechaVencimiento"
-                                placeholder="Selecciona una fecha">
-                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
-                            <!-- Icono de calendario -->
-                        </div>
+                        <label for="nuevoInsumoPrecio" class="form-label fw-bold">Precio</label>
+                        <input type="number" class="form-control" id="nuevoInsumoPrecio" placeholder="Escribe el precio"
+                            required disabled>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoContratoCliente" class="form-label fw-bold">Cliente</label>
-                        <select class="form-control" id="nuevoContratoCliente">
-                            <option value="">Seleccionar cliente</option>
-                            <!-- Opciones serán cargadas con JavaScript -->
-                        </select>
+                        <label for="nuevoInsumoMedicamento" class="form-label fw-bold">Medicamento</label>
+                        <input type="text" class="form-control" id="nuevoInsumoMedicamento"
+                            placeholder="Escribe el nombre del medicamento" required disabled>
                     </div>
-                    <div class="mb-3">
-                        <label for="nuevoContratoCategoria" class="form-label fw-bold">Categoria</label>
-                        <select class="form-control" id="nuevoContratoCategoria" <option value="">Seleccionar cliente
-                            </option>
-                            <!-- Opciones serán cargadas con JavaScript -->
-                        </select>
-
-                    </div>
-                    <input type="hidden" id="nuevoContratoId">
+                    <input type="hidden" id="nuevoInsumoId">
+                    <input type="hidden" id="medicamentoId">
                 </form>
             </div>
             <div class="modal-footer">
@@ -360,6 +346,8 @@
                 <button type="button" class="btn btn-primary" id="guardarNuevoCambios">Guardar cambios</button>
             </div>
         </div>
+    </div>
+
     </div>
 
     <!-- Bootstrap JS -->
@@ -433,38 +421,53 @@
 
 
         $(document).ready(function () {
-            const tabla = $('#tablaContratos').DataTable({
+            const tabla = $('#tablaInsumos').DataTable({
                 pageLength: 6,
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
                 }
             });
 
-            function cargarContratos(url) {
+            function cargarInsumos(url) {
                 fetch(url, {
                     method: 'GET',
                     headers: {
-                        "Content-Type": "application/json",
-                            "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
                     }
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data.result);
+                        console.log('Insumos:', data);  // Verificar los insumos
                         if (data.result && Array.isArray(data.result)) {
                             tabla.clear();
-                            data.result.forEach((contrato, index) => {
-                                const clienteNombre = contrato.cliente ? contrato.cliente.nombre : 'Sin Cliente';
-                                const categoriaNombre = contrato.categorias ? contrato.categorias.nombre : 'Sin Categoría';
+
+                            data.result.forEach((insumo, index) => {
+                                const medicamento = insumo.medicamentos;
+
+                                const medicamentoNombre = medicamento.medicamento || 'Sin Medicamento';
+                                const medicamentoDescripcion = medicamento.descripcion || 'Sin Descripción';
+                                const medicamentoPrecio = medicamento.precio || 'Sin Precio';
+
+                                // Agregar la fila a la tabla
                                 tabla.row.add([
                                     index + 1,
-                                    contrato.nombre,
-                                    contrato.descripcion,
-                                    contrato.fechaVencimiento,
-                                    clienteNombre,
-                                    categoriaNombre,
-                                    contrato.status ? 'Activo' : 'Inactivo',
-                                    
+                                    medicamentoNombre,
+                                    medicamentoDescripcion,
+                                    medicamentoPrecio,
+                                    insumo.stock,
+                                    insumo.status ? 'Disponible' : 'Agotado/Sin disponibilidad',
+                                    `<button class="btn btn-primary editar" 
+                        data-id="${insumo.id}" 
+                        data-stock="${insumo.stock}" 
+                        data-descripcion="${insumo.descripcion}" 
+                        data-status="${insumo.status}" 
+                        data-medicamento-id="${medicamento.id}" 
+                        data-medicamento-nombre="${medicamentoNombre}" 
+                        data-medicamento-precio="${medicamentoPrecio}">
+                        <i class='bx bx-edit'></i>
+                    </button>
+                    `
                                 ]).draw();
                             });
                         }
@@ -472,75 +475,100 @@
                     .catch(console.error);
             }
 
+            cargarInsumos('http://localhost:8080/insumos/all');
+            const nuevoModal = document.getElementById("nuevoModalActualizarInsumo");
+            const cerrarBotones = [
+                document.getElementById("cerrarNuevoModal"),
+                document.getElementById("cerrarNuevoModalFooter")
+            ];
+            const abrirModal = () => {
+                nuevoModal.style.display = "flex";
+            };
 
-            cargarContratos('http://localhost:8080/contratos/all');
+            const cerrarModal = () => {
+                nuevoModal.style.display = "none";
+            };
 
-            $('#buscarActivas').on('change', function () {
-                cargarContratos(this.checked ? 'http://localhost:8080/contratos/status' : 'http://localhost:8080/contratos/all');
+            cerrarBotones.forEach(btn => btn.addEventListener("click", cerrarModal));
+
+            document.getElementById("guardarNuevoCambios").addEventListener("click", function () {
+                const id = document.getElementById("nuevoInsumoId").value;
+                const descripcion = document.getElementById("nuevoInsumoDescripcion").value;
+                const stock = document.getElementById("nuevoInsumoStock").value;
+                const precio = document.getElementById("nuevoInsumoPrecio").value;
+                const medicamentoId = document.getElementById("medicamentoId").value;
+
+                fetch('http://localhost:8080/insumos/update', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    },
+                    body: JSON.stringify({ id, stock, descripcion, medicamentoId })
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error al actualizar insumo');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const alerta = document.getElementById("alerta");
+
+                        if (data.type === "SUCCESS") {
+                            alerta.textContent = "Insumo actualizado exitosamente.";
+                            alerta.className = "alert alert-success";
+                        } else {
+                            alerta.textContent = "Error al actualizar insumo: " + (data.message || "Error desconocido.");
+                            alerta.className = "alert alert-danger";
+                        }
+
+                        alerta.style.display = "block";
+
+                        // Ocultar la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+
+                        // Actualiza la tabla o recarga la lista de insumos
+                        cargarInsumos('http://localhost:8080/insumos/all');
+                        cerrarModal();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        const alerta = document.getElementById("alerta");
+                        alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                        alerta.className = "alert alert-danger";
+                        alerta.style.display = "block";
+
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                    });
             });
 
-            
+            // Apertura del modal con los datos de insumo
+            document.getElementById("tablaInsumos").addEventListener("click", function (e) {
+                if (e.target.closest(".editar")) {
+                    const button = e.target.closest(".editar");
+                    const id = button.getAttribute("data-id");
+                    const descripcion = button.getAttribute("data-descripcion");
+                    const stock = button.getAttribute("data-stock");
+                    const precio = button.getAttribute("data-medicamento-precio");
+                    const medicamento = button.getAttribute("data-medicamento-nombre");
+                    const medId = button.getAttribute("data-medicamento-id")
 
-            
+                    // Asignar los valores de los campos al modal
+                    document.getElementById("nuevoInsumoId").value = id;
+                    document.getElementById("nuevoInsumoDescripcion").value = descripcion;
+                    document.getElementById("nuevoInsumoStock").value = stock;
+                    document.getElementById("nuevoInsumoPrecio").value = precio;
+                    document.getElementById("nuevoInsumoMedicamento").value = medicamento;
+                    document.getElementById("medicamentoId").value = medId;
 
-        });
-        document.addEventListener("DOMContentLoaded", function () {
-            // Función para cargar los clientes
-            function loadClientes() {
-                fetch('http://localhost:8080/clientes/all', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                        const clienteSelect = document.getElementById('nuevoContratoCliente');
-                        if (data.result && Array.isArray(data.result)) {
-                            data.result.forEach(cliente => {
-                                const option = document.createElement('option');
-                                option.value = cliente.id;
-                                option.textContent = cliente.nombre;
-                                clienteSelect.appendChild(option);
-                            });
-                        } else {
-                            console.error('Los datos de clientes no están en el formato esperado.');
-                        }
-                    })
-                    .catch(error => console.error("Error cargando los clientes:", error));
-            }
+                    abrirModal();
+                }
+            });
 
-            // Función para cargar las categorías
-            function loadCategorias() {
-                fetch('http://localhost:8080/categoria/all', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                        const categoriaSelect = document.getElementById('nuevoContratoCategoria');
-                        if (data.result && Array.isArray(data.result)) {
-                            data.result.forEach(categoria => {
-                                const option = document.createElement('option');
-                                option.value = categoria.id;
-                                option.textContent = categoria.nombre;
-                                categoriaSelect.appendChild(option);
-                            });
-                        } else {
-                            console.error('Los datos de categorías no están en el formato esperado.');
-                        }
-                    })
-                    .catch(error => console.error("Error cargando las categorías:", error));
-            }
 
-            loadClientes();
-            loadCategorias();
         });
     </script>
     <!--<script src="../js/access.js"></script> -->
