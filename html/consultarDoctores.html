@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Consultar Contratos</title>
+    <title>Consultar Doctor</title>
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
     <!-- Enlace al favicon -->
@@ -320,12 +320,12 @@
                 <form id="nuevoFormActualizarContrato">
                     <div class="mb-3">
                         <label for="nuevoContratoNombre" class="form-label fw-bold">Nombre del Contrato</label>
-                        <input type="text" class="form-control" id="nuevoContratoNombre"
+                        <input type="text" class="form-control" id="nuevoNombre"
                             placeholder="Escribe el nombre del contrato" required>
                     </div>
                     <div class="mb-3">
                         <label for="nuevoContratoDescripcion" class="form-label fw-bold">Descripción</label>
-                        <textarea class="form-control" id="nuevoContratoDescripcion" rows="3"
+                        <textarea class="form-control" id="nuevoApellido" rows="3"
                             placeholder="Escribe una descripción" required></textarea>
                     </div>
                     <div class="mb-3">
@@ -395,7 +395,7 @@
         document.addEventListener("DOMContentLoaded", function () {
             // Función para cargar los clientes
             function loadClientes() {
-                fetch('http://localhost:8080/clientes/all', {
+                fetch('http://localhost:8080/doctores/all', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -409,15 +409,15 @@
                         if (data.result && Array.isArray(data.result)) {
                             data.result.forEach(cliente => {
                                 const option = document.createElement('option');
-                                option.value = cliente.id;
-                                option.textContent = cliente.nombre;
+                                option.value = doctor.id;
+                                option.textContent = doctor.nombre;
                                 clienteSelect.appendChild(option);
                             });
                         } else {
-                            console.error('Los datos de clientes no están en el formato esperado.');
+                            console.error('Los datos del doctor no están en el formato esperado.');
                         }
                     })
-                    .catch(error => console.error("Error cargando los clientes:", error));
+                    .catch(error => console.error("Error cargando los doctores:", error));
             }
 
             // Función para cargar las categorías
@@ -447,7 +447,7 @@
                     .catch(error => console.error("Error cargando las categorías:", error));
             }
 
-            loadClientes();
+            loadDoctores();
             loadCategorias();
         });
     </script>
