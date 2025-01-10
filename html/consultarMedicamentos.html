@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
     <style>
         /* Personalización para la tabla */
-        #tablaCategorias_wrapper {
+        #tablaMeds_wrapper {
             margin: 20px 0;
         }
 
@@ -276,7 +276,7 @@
     <!-- Contenido principal -->
     <div class="bg-light">
         <div class="container mt-5">
-            <h1 class="text-center">Consultar Categorías</h1>
+            <h1 class="text-center">Consultar Medicamentos</h1>
             <div class="mb-3">
                 <label for="buscarActivas" class="form-label">Mostrar solo categorías activas:</label>
                 <input type="checkbox" id="buscarActivas">
@@ -288,6 +288,7 @@
                         <th>Nombre</th>
                         <th>Descripción</th>
                         <th>Precio</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="categoriasBody">
@@ -308,16 +309,21 @@
             <div class="modal-body">
                 <form id="nuevoFormActualizarCategoria">
                     <div class="mb-3">
-                        <label for="nuevoCategoriaNombre" class="form-label fw-bold">Nombre de la Categoría</label>
-                        <input type="text" class="form-control" id="nuevoCategoriaNombre"
+                        <label for="nuevoMedicamentoNombre" class="form-label fw-bold">Nombre del Medicamento</label>
+                        <input type="text" class="form-control" id="nuevoMedicamentoNombre"
                             placeholder="Escribe el nombre de la categoría" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoCategoriaDescripcion" class="form-label fw-bold">Descripción</label>
-                        <textarea class="form-control" id="nuevoCategoriaDescripcion" rows="3"
+                        <label for="nuevoMedicamentoDescripcion" class="form-label fw-bold">Descripción</label>
+                        <textarea class="form-control" id="nuevoMedicamentoDescripcion" rows="3"
                             placeholder="Escribe una descripción" required></textarea>
                     </div>
-                    <input type="hidden" id="nuevoCategoriaId">
+                    <div class="mb-3">
+                        <label for="nuevoMedicamentoPrecio" class="form-label fw-bold">Precio</label>
+                        <input type="text" class="form-control" id="nuevoMedicamentoPrecio"
+                            placeholder="Escribe el nombre de la categoría" required>
+                    </div>
+                    <input type="hidden" id="nuevoMedicamentoId">
                 </form>
             </div>
             <div class="modal-footer">
@@ -385,7 +391,7 @@
                 }
             });
            
-            function cargarCategorias(url) {
+            function cargarMeds(url) {
                 fetch(url, { method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -402,11 +408,8 @@
                                     medicamentos.medicamento,
                                     medicamentos.descripcion,
                                     medicamentos.precio,
-                                    `<button class="btn btn-primary editar" data-id="${medicamentos.id}" data-nombre="${medicamentos.medicamento}" data-descripcion="${medicamentos.descripcion} ">
+                                    `<button class="btn btn-primary editar" data-id="${medicamentos.id}" data-nombre="${medicamentos.medicamento}" data-descripcion="${medicamentos.descripcion} " data-precio="${medicamentos.precio}">
                                     <i class='bx bx-edit'></i>
-                                </button>
-                                <button class="btn btn-secondary cambiar-status" data-id="${medicamentos.id}">
-                                    <i class='bx bx-refresh'></i>
                                 </button>`
                                 ]).draw();
                             });
@@ -415,64 +418,9 @@
                     .catch(console.error);
             }
 
-            cargarCategorias('http://localhost:8080/medicamentos/all');
+            cargarMeds('http://localhost:8080/medicamentos/all');
 
-            $('#buscarActivas').on('change', function () {
-                cargarCategorias(this.checked ? 'http://localhost:8080/categoria/actives' : 'http://localhost:8080/categoria/all');
-            });
-
-            $('#tablaMeds tbody').on('click', '.cambiar-status', function () {
-                const id = $(this).data('id');
-                const estadoActual = $(this).data('estado'); // Obtener el estado actual
-                const nuevoEstado = estadoActual === 'activo' ? false : true;
-
-                fetch(`http://localhost:8080/categoria/change-status`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-                    },
-                    body: JSON.stringify({
-                        id: id,
-                        status: nuevoEstado
-                    })
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        const alerta = document.getElementById("alerta");
-
-                        if (data.type === "SUCCESS") {
-                            alerta.textContent = "Estado de la categoría actualizado correctamente.";
-                            alerta.className = "alert alert-success";
-                        } else {
-                            alerta.textContent = "Error al cambiar el estado de la categoría: " + (data.message || "Error desconocido.");
-                            alerta.className = "alert alert-danger";
-                        }
-
-                        // Muestra la alerta
-                        alerta.style.display = "block";
-
-                        // Oculta la alerta después de 5 segundos
-                        setTimeout(() => {
-                            alerta.style.display = "none";
-                        }, 5000);
-
-                        // Actualiza la tabla o recarga la lista de categorías
-                        cargarCategorias('http://localhost:8080/categoria/all');
-                    })
-                    .catch(error => {
-                        console.error('Error al cambiar el estado de la categoría:', error);
-                        const alerta = document.getElementById("alerta");
-                        alerta.textContent = "Hubo un error al procesar tu solicitud.";
-                        alerta.className = "alert alert-danger";
-                        alerta.style.display = "block";
-
-                        // Oculta la alerta después de 5 segundos
-                        setTimeout(() => {
-                            alerta.style.display = "none";
-                        }, 5000);
-                    });
-            });
+            
 
 
             const nuevoModal = document.getElementById("nuevoModalActualizarCategoria");
@@ -491,16 +439,17 @@
             cerrarBotones.forEach(btn => btn.addEventListener("click", cerrarModal));
 
             document.getElementById("guardarNuevoCambios").addEventListener("click", function () {
-                const id = document.getElementById("nuevoCategoriaId").value;
-                const nombre = document.getElementById("nuevoCategoriaNombre").value;
-                const descripcion = document.getElementById("nuevoCategoriaDescripcion").value;
+                const id = document.getElementById("nuevoMedicamentoId").value;
+                const medicamento = document.getElementById("nuevoMedicamentoNombre").value;
+                const descripcion = document.getElementById("nuevoMedicamentoDescripcion").value;
+                const precio = document.getElementById("nuevoMedicamentoPrecio").value;
 
-                fetch('http://localhost:8080/categoria/update', {
+                fetch('http://localhost:8080/medicamentos/update', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json',
                         "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                      },
-                    body: JSON.stringify({ id, nombre, descripcion})
+                    body: JSON.stringify({ id, medicamento, descripcion, precio})
                 })
                     .then(response => {
                         if (!response.ok) throw new Error('Error al actualizar la categoría');
@@ -510,10 +459,10 @@
                         const alerta = document.getElementById("alerta");
 
                         if (data.type === "SUCCESS") {
-                            alerta.textContent = "Categoría actualizada exitosamente.";
+                            alerta.textContent = "Medicamento actualizado exitosamente.";
                             alerta.className = "alert alert-success";
                         } else {
-                            alerta.textContent = "Error al actualizar la categoría: " + (data.message || "Error desconocido.");
+                            alerta.textContent = "Error al actualizar medicamento: " + (data.message || "Error desconocido.");
                             alerta.className = "alert alert-danger";
                         }
 
@@ -526,7 +475,7 @@
                         }, 5000);
                         console.log('Categoría actualizada:', data);
                         // Actualiza la tabla o recarga la lista de categorías
-                        cargarCategorias('http://localhost:8080/categoria/all');
+                        cargarMeds('http://localhost:8080/medicamentos/all');
                         cerrarModal();
 
                     })
@@ -551,10 +500,12 @@
                     const id = button.getAttribute("data-id");
                     const nombre = button.getAttribute("data-nombre");
                     const descripcion = button.getAttribute("data-descripcion");
+                    const precio = button.getAttribute("data-precio");
 
-                    document.getElementById("nuevoCategoriaId").value = id;
-                    document.getElementById("nuevoCategoriaNombre").value = nombre;
-                    document.getElementById("nuevoCategoriaDescripcion").value = descripcion;
+                    document.getElementById("nuevoMedicamentoId").value = id;
+                    document.getElementById("nuevoMedicamentoNombre").value = nombre;
+                    document.getElementById("nuevoMedicamentoDescripcion").value = descripcion;
+                    document.getElementById("nuevoMedicamentoPrecio").value = precio;
 
                     abrirModal();
                 }
