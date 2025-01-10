@@ -283,7 +283,7 @@
     <!-- Contenido principal -->
     <div class="bg-light">
         <div class="container mt-5">
-            <h1 class="text-center">Consultar Contratos</h1>
+            <h1 class="text-center">Consultar Doctores</h1>
             <div class="mb-3">
                 <label for="buscarActivas" class="form-label">Mostrar solo contratos activos:</label>
                 <input type="checkbox" id="buscarActivas">
@@ -298,6 +298,7 @@
                         <th>Especialidad</th>
                         <th>Consultorio</th>
                         <th>Status</th>
+                        <th>Acciones</th>
 
                     </tr>
                 </thead>
@@ -319,39 +320,29 @@
             <div class="modal-body">
                 <form id="nuevoFormActualizarContrato">
                     <div class="mb-3">
-                        <label for="nuevoContratoNombre" class="form-label fw-bold">Nombre del Contrato</label>
-                        <input type="text" class="form-control" id="nuevoNombre"
-                            placeholder="Escribe el nombre del contrato" required>
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre"
+                            placeholder="Escribe el nombre del doctor" maxlength="30" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoContratoDescripcion" class="form-label fw-bold">Descripción</label>
-                        <textarea class="form-control" id="nuevoApellido" rows="3"
-                            placeholder="Escribe una descripción" required></textarea>
+                        <label for="apellidos" class="form-label">Apellidos:</label>
+                        <input type="text" class="form-control" id="apellidos"
+                            placeholder="Escribe los apellidos del doctor" maxlength="30" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoContratoFechaVencimiento" class="form-label">Fecha de vencimiento del
-                            contrato</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control datepicker" id="nuevoContratoFechaVencimiento"
-                                placeholder="Selecciona una fecha">
-                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
-                            <!-- Icono de calendario -->
-                        </div>
+                        <label for="cedula" class="form-label">Cédula:</label>
+                        <input type="text" class="form-control" id="cedula"
+                            placeholder="Escribe la cédula de el doctor" maxlength="70" required >
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoContratoCliente" class="form-label fw-bold">Cliente</label>
-                        <select class="form-control" id="nuevoContratoCliente">
-                            <option value="">Seleccionar cliente</option>
-                            <!-- Opciones serán cargadas con JavaScript -->
-                        </select>
+                        <label for="especialidad" class="form-label">Especialidad:</label>
+                        <input type="text" class="form-control" id="especialidad"
+                            placeholder="Escribe la especialidad" maxlength="70" required >
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoContratoCategoria" class="form-label fw-bold">Categoria</label>
-                        <select class="form-control" id="nuevoContratoCategoria" <option value="">Seleccionar cliente
-                            </option>
-                            <!-- Opciones serán cargadas con JavaScript -->
-                        </select>
-
+                        <label for="consultorio" class="form-label">Consultorio:</label>
+                        <input type="text" class="form-control" id="consultorio"
+                            placeholder="Escribe el Consultorio" maxlength="70" required >
                     </div>
                     <input type="hidden" id="nuevoContratoId">
                 </form>
@@ -388,67 +379,6 @@
                 todayHighlight: true, // Resalta la fecha actual
                 language: 'es'       // Configura el idioma a español
             });
-        });
-    </script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Función para cargar los clientes
-            function loadClientes() {
-                fetch('http://localhost:8080/doctores/all', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                        const clienteSelect = document.getElementById('nuevoContratoCliente');
-                        if (data.result && Array.isArray(data.result)) {
-                            data.result.forEach(cliente => {
-                                const option = document.createElement('option');
-                                option.value = doctor.id;
-                                option.textContent = doctor.nombre;
-                                clienteSelect.appendChild(option);
-                            });
-                        } else {
-                            console.error('Los datos del doctor no están en el formato esperado.');
-                        }
-                    })
-                    .catch(error => console.error("Error cargando los doctores:", error));
-            }
-
-            // Función para cargar las categorías
-            function loadCategorias() {
-                fetch('http://localhost:8080/categoria/all', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                        const categoriaSelect = document.getElementById('nuevoContratoCategoria');
-                        if (data.result && Array.isArray(data.result)) {
-                            data.result.forEach(categoria => {
-                                const option = document.createElement('option');
-                                option.value = categoria.id;
-                                option.textContent = categoria.nombre;
-                                categoriaSelect.appendChild(option);
-                            });
-                        } else {
-                            console.error('Los datos de categorías no están en el formato esperado.');
-                        }
-                    })
-                    .catch(error => console.error("Error cargando las categorías:", error));
-            }
-
-            loadDoctores();
-            loadCategorias();
         });
     </script>
 
@@ -523,11 +453,11 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data.data); // Asegúrate de que `data.data` sea la propiedad que contiene los doctores
-                        if (data.data && Array.isArray(data.data)) {
-                            tabla.clear(); // Limpiar la tabla antes de insertar nuevos datos
-                            data.data.forEach((doctor, index) => {
-                                const turnoNombre = doctor.turno ? doctor.turno.nombre : 'Sin Turno';
+                        console.log('Doc:', data); 
+                        if (data.result && Array.isArray(data.result)){
+                            tabla.clear(); 
+                            data.result.forEach((doctor, index) => {
+                                //const turnoNombre = doctor.turno ? doctor.turno.nombre : 'Sin Turno';
                                 tabla.row.add([
                                     index + 1,
                                     doctor.nombre,
@@ -536,7 +466,7 @@
                                     doctor.especialidad,
                                     doctor.consultorio,
                                     doctor.status ? 'Activo' : 'Inactivo',
-                                    turnoNombre,
+                                    //turnoNombre,
                                     `<button class="btn btn-primary editar" 
                                 data-id="${doctor.id}" 
                                 data-nombre="${doctor.nombre}" 
@@ -560,9 +490,7 @@
                     .catch(console.error);
             }
 
-
-
-            cargarContratos('http://localhost:8080/doctores/all');
+            cargarDoctores('http://localhost:8080/doctores/all');
 
             $('#buscarActivas').on('change', function () {
                 cargarContratos(this.checked ? 'http://localhost:8080/contratos/actives' : 'http://localhost:8080/contratos/all');
@@ -571,36 +499,20 @@
             $('#tablaContratos tbody').on('click', '.cambiar-status', function () {
                 const id = $(this).data('id');
                 const nombre = $(this).data('nombre');
-                const descripcion = $(this).data('descripcion');
-                const fechaVencimiento = new Date($(this).data('fechavencimiento')).toISOString().split('T')[0];
-                const clienteId = $(this).data('clienteid');
-                const categoriaId = $(this).data('categoriaid');
-                const nuevoEstado = $(this).data('estado') === 'activo' ? false : true;
+                const apellidos = $(this).data('apellidos');
+                const cedula = $(this).data('cedula');
+                const especialidad = $(this).data('especialidad');
+                const consultorio = $(this).data('consultorio');
 
-                console.log({
-                    id,
-                    nombre,
-                    descripcion,
-                    fechaVencimiento,
-                    clienteId,
-                    categoriaId,
-                    status: nuevoEstado
-                });
 
-                fetch(`http://localhost:8080/contratos/change-status`, {
+                fetch(`http://localhost:8080/doctores/changeStatus`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                     },
                     body: JSON.stringify({
-                        id: id,
-                        nombre: nombre,
-                        descripcion: descripcion,
-                        fechaVencimiento: fechaVencimiento,
-                        clienteId: clienteId,
-                        categoriaId: categoriaId,
-                        status: nuevoEstado
+                        id: id
                     })
                 })
                     .then(response => {
@@ -613,10 +525,10 @@
                         const alerta = document.getElementById("alerta");
 
                         if (data.type === "SUCCESS") {
-                            alerta.textContent = "Estado del contrato actualizado correctamente.";
+                            alerta.textContent = "Estado actualizado correctamente.";
                             alerta.className = "alert alert-success";
                         } else {
-                            alerta.textContent = "Error al cambiar el estado del contrato: " + (data.message || "Error desconocido.");
+                            alerta.textContent = "Error al cambiar el estado: " + (data.message || "Error desconocido.");
                             alerta.className = "alert alert-danger";
                         }
 
@@ -629,7 +541,7 @@
                         }, 5000);
 
                         // Actualiza la tabla o recarga la lista de contratos
-                        cargarContratos('http://localhost:8080/contratos/all');
+                        cargarDoctores('http://localhost:8080/doctores/all');
                     })
                     .catch(error => {
                         console.error('Error al cambiar el estado del contrato:', error);
@@ -662,23 +574,23 @@
 
             document.getElementById("guardarNuevoCambios").addEventListener("click", function () {
                 const id = document.getElementById("nuevoContratoId").value;
-                const nombre = document.getElementById("nuevoContratoNombre").value;
-                const descripcion = document.getElementById("nuevoContratoDescripcion").value;
-                const fechaVencimiento = document.getElementById("nuevoContratoFechaVencimiento").value;
-                const clienteId = document.getElementById("nuevoContratoCliente").value;
-                const categoriaId = document.getElementById("nuevoContratoCategoria").value;
+                const nombre = document.getElementById("nombre").value;
+                const apellidos = document.getElementById("apellidos").value;
+                const cedula = document.getElementById("cedula").value;
+                const especialidad = document.getElementById("especialidad").value;
+                const consultorio = document.getElementById("consultorio").value;
 
-                console.log("Datos a enviar:", { id, nombre, descripcion, fechaVencimiento, clienteId, categoriaId });
+                //console.log("Datos a enviar:", { id, nombre, descripcion, fechaVencimiento, clienteId, categoriaId });
 
                 const datosEnvio = {
                     id,
                     nombre,
-                    descripcion,
-                    fechaVencimiento,
-                    clienteId: Number(clienteId),
-                    categoriaId: Number(categoriaId)
+                    apellidos,
+                    cedula,
+                    especialidad,
+                    consultorio
                 };
-                fetch('http://localhost:8080/contratos/update', {
+                fetch('http://localhost:8080/doctores/update', {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -694,10 +606,10 @@
                         const alerta = document.getElementById("alerta");
 
                         if (data.type === "SUCCESS") {
-                            alerta.textContent = "Contrato actualizado exitosamente.";
+                            alerta.textContent = "Doctor actualizado exitosamente.";
                             alerta.className = "alert alert-success";
                         } else {
-                            alerta.textContent = "Error al actualizar el contrato: " + (data.message || "Error desconocido.");
+                            alerta.textContent = "Error al actualizar el doctor: " + (data.message || "Error desconocido.");
                             alerta.className = "alert alert-danger";
                         }
 
@@ -710,7 +622,7 @@
                         }, 5000);
                         console.log('Contrato actualizado:', data);
                         // Actualiza la tabla o recarga la lista de contratos
-                        cargarContratos('http://localhost:8080/contratos/all');
+                        cargarDoctores('http://localhost:8080/doctores/all');
                         cerrarModal();
 
                     })
@@ -733,62 +645,19 @@
                     const button = e.target.closest(".editar");
                     const id = button.getAttribute("data-id");
                     const nombre = button.getAttribute("data-nombre");
-                    const descripcion = button.getAttribute("data-descripcion");
-                    const fechaVencimiento = button.getAttribute("data-fechaVencimiento");
-                    const clienteId = button.getAttribute("data-clienteId");
-                    const categoriaId = button.getAttribute("data-categoriaId");
+                    const apellidos = button.getAttribute("data-apellidos");
+                    const cedula = button.getAttribute("data-cedula");
+                    const especialidad = button.getAttribute("data-especialidad");
+                    const consultorio = button.getAttribute("data-consultorio");
 
                     // Rellenar los campos del formulario
                     document.getElementById("nuevoContratoId").value = id;
-                    document.getElementById("nuevoContratoNombre").value = nombre;
-                    document.getElementById("nuevoContratoDescripcion").value = descripcion;
-                    document.getElementById("nuevoContratoFechaVencimiento").value = fechaVencimiento;
+                    document.getElementById("nombre").value = nombre;
+                    document.getElementById("apellidos").value = apellidos;
+                    document.getElementById("cedula").value = cedula;
+                    document.getElementById("especialidad").value = especialidad;
+                    document.getElementById("consultorio").value = consultorio;
 
-                    // Establecer los valores de cliente y categoría en los `select`
-                    Promise.all([
-                        fetch(`http://localhost:8080/clientes/all`, {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-                            }
-                        }).then(response => response.json()),
-                        fetch(`http://localhost:8080/categoria/all`, {
-                            method: 'GET',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-                            }
-                        }).then(response => response.json())
-                    ])
-                        .then(([clientesData, categoriasData]) => {
-                            const clienteSelect = document.getElementById("nuevoContratoCliente");
-                            clienteSelect.innerHTML = `<option value="">Seleccionar cliente</option>`;
-                            clientesData.result.forEach(cliente => {
-                                const option = document.createElement("option");
-                                option.value = cliente.id;
-                                option.textContent = cliente.nombre;
-                                if (cliente.id == clienteId) {
-                                    option.selected = true;
-                                }
-                                clienteSelect.appendChild(option);
-                            });
-
-                            const categoriaSelect = document.getElementById("nuevoContratoCategoria");
-                            categoriaSelect.innerHTML = `<option value="">Seleccionar categoría</option>`;
-                            categoriasData.result.forEach(categoria => {
-                                const option = document.createElement("option");
-                                option.value = categoria.id;
-                                option.textContent = categoria.nombre;
-                                if (categoria.id == categoriaId) {
-                                    option.selected = true;
-                                }
-                                categoriaSelect.appendChild(option);
-                            });
-                        })
-                        .catch(error => {
-                            console.error("Error al cargar clientes o categorías:", error);
-                        });
 
                     abrirModal();
                 }
