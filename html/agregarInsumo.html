@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Agregar cliente</title>
+    <title>Agregar Insumo</title>
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
@@ -119,24 +119,25 @@
         <div class="bg-light">
             <!-- Contenido principal -->
             <div class="container mt-5">
-                <h1 class="text-center">Agregar insumo</h1>
+                <h1 class="text-center">Agregar Insumo</h1>
                 <!-- Aquí va el formulario u otra funcionalidad -->
                 <form id="insumoForm">
                     <div class="mb-3">
-                        <label for="stock" class="form-label">Stock</label>
+                        <label for="stock" class="form-label">Cantidad para stock:</label>
                         <input type="number" class="form-control" id="stock"
-                            placeholder="Escribe la cantidad de stock" maxlength="30" required>
+                            placeholder="Escribe la cantidad para stock" maxlength="30" required>
                     </div>
                     <div class="mb-3">
-                        <label for="descripcion" class="form-label">Descripcion</label>
+                        <label for="descripcion" class="form-label">Descripción:</label>
                         <input type="text" class="form-control" id="descripcion"
                             placeholder="Escribe una descripcion de el insumo" maxlength="30" required>
                     </div>
                     <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
-                        <input type="Boolean" class="form-control" id="status"
-                            placeholder="Escribe el status de el insumo" maxlength="70" required >
-                    </div>
+                        <label for="medicamentoId" class="form-label">Medicamento:</label>
+                        <select class="form-control" id="medicamentoId" name="medicamentoId">
+                            <option value="">Selecciona el medicamento</option> <!-- Opción por defecto -->
+                            <!-- Opciones serán cargadas con JavaScript -->
+                        </select><br>
                     <button type="submit" class="btn btn-primary">Agregar insumo</button>
                 </form>
             </div>
@@ -149,11 +150,36 @@
 
         <!--Container Main end-->
         <script type='text/javascript'
-            src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js'></script>
+            src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js'>
+        </script>
+
+        <script>
+        // Función para cargar los medicamentos
+        function loadMedicamentos() {
+            fetch('http://localhost:8080/insumos/medicamentos')  // Cambia la URL si es necesario
+                .then(response => response.json())  // Convierte la respuesta a JSON
+                .then(data => {  // `data` ahora es la respuesta JSON
+                    console.log(data);  // Verifica qué contiene `data`
+                    const medicamentoSelect = document.getElementById('medicamentoId');
+                    if (data.result && Array.isArray(data.result)) {  // Verifica si data.result existe y es un arreglo
+                        data.result.forEach(medicamento => {  // Asegúrate de que `data.result` sea un arreglo
+                            const option = document.createElement('option');
+                            option.value = medicamento.id;  // El valor será el ID de la categoría
+                            option.textContent = medicamento.medicamento;  // El texto mostrado será el nombre de la categoría
+                            medicamentoSelect.appendChild(option);
+                        });
+                    } else {
+                        console.error('Los datos del medicamento no están en el formato esperado.');
+                    }
+                })
+                .catch(error => console.error("Error cargando los medicamentos:", error));
+                }
+            // Llamar a las funciones para cargar los datos cuando la página se haya cargado
+            loadMedicamentos(); 
+        </script>
+
         <script type='text/javascript'>
-
             document.addEventListener("DOMContentLoaded", function (event) {
-
                 const showNavbar = (toggleId, navId, bodyId, headerId) => {
                     const toggle = document.getElementById(toggleId),
                         nav = document.getElementById(navId),
@@ -190,25 +216,25 @@
 
                 // Your code to run since DOM is loaded and ready
             });
+        </script>
 
-
+        <script>
             // Lógica para enviar datos, mostrar y ocultar la alerta
-            document.getElementById("clienteForm").addEventListener("submit", function (e) {
+            document.getElementById("insumoForm").addEventListener("submit", function (e) {
                 e.preventDefault(); // Evita el envío tradicional del formulario
 
-                const nombre = document.getElementById("nombreCliente").value;
-                const apellidos = document.getElementById("apellidosCliente").value;
-                const correo = document.getElementById("correoCliente").value;
-                const telefono = document.getElementById("telefonoCliente").value;
+                const nombre = document.getElementById("stock").value;
+                const apellidos = document.getElementById("descripcion").value;
+                const medicamentoId = document.getElementById("medicamentoId").value;
 
                 const data = {
-                    nombre: nombre,
-                    apellidos: apellidos,
-                    correo: correo,
-                    telefono: telefono
+                    stock: stock,
+                    descripcion: descripcion,
+                    medicamentoId: medicamentoId
                 };
+                console.log("Datos: ", data);
 
-                fetch('http://localhost:8080/clientes/save', {
+                fetch('http://localhost:8080/insumos/save', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -226,17 +252,13 @@
                         const alerta = document.getElementById("alerta");
 
                         if (data.type === "SUCCESS") {
-                            alerta.textContent = "Cliente agregado exitosamente.";
+                            alerta.textContent = "Insumo agregado exitosamente.";
                             alerta.className = "alert alert-success";
                         } else {
-                            alerta.textContent = "Error al agregar la categoría: " + (data.message || "Error desconocido.");
+                            alerta.textContent = "Error al agregar el insumo: " + (data.message || "Error desconocido.");
                             alerta.className = "alert alert-danger";
                         }
 
-                        document.getElementById("nombreCliente").value = "";
-                        document.getElementById("apellidosCliente").value = "";
-                        document.getElementById("correoCliente").value = "";
-                        document.getElementById("telefonoCliente").value = "";
                         // Muestra la alerta
                         alerta.style.display = "block";
 
@@ -257,17 +279,14 @@
                             alerta.style.display = "none";
                         }, 5000);
                     });
-            });
-
-
-
+                });
+            </script>
+            <!--<script src="../js/access.js"></script> -->
+            <script type='text/javascript'>var myLink = document.querySelector('a[href="#"]');
+                myLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                });</script>
         </script>
-        <!--<script src="../js/access.js"></script> -->
-        <script type='text/javascript'>var myLink = document.querySelector('a[href="#"]');
-            myLink.addEventListener('click', function (e) {
-                e.preventDefault();
-            });</script>
-
     </body>
 
 </html>
