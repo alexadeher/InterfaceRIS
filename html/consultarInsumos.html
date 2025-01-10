@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Consultar Contratos</title>
+    <title>Consultar Insumos</title>
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
     <!-- Enlace al favicon -->
@@ -24,32 +24,32 @@
             margin: 20px 0;
         }
 
-        #tablaContratos {
+        #tablaInsumos {
             border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        #tablaContratos thead {
+        #tablaInsumos thead {
             background-color: #4723D9;
             color: #ffffff;
         }
 
-        #tablaContratos thead th {
+        #tablaInsumos thead th {
             text-align: center;
             font-weight: bold;
         }
 
-        #tablaContratos tbody tr {
+        #tablaInsumos tbody tr {
             transition: background-color 0.2s ease;
         }
 
-        #tablaContratos tbody tr:hover {
+        #tablaInsumos tbody tr:hover {
             background-color: #dce0f6d1;
         }
 
-        #tablaContratos .btn {
+        #tablaInsumos .btn {
             margin: 0 2px;
         }
 
@@ -283,20 +283,19 @@
     <!-- Contenido principal -->
     <div class="bg-light">
         <div class="container mt-5">
-            <h1 class="text-center">Consultar Contratos</h1>
+            <h1 class="text-center">Consultar Stock Insumos</h1>
             <div class="mb-3">
                 <label for="buscarActivas" class="form-label">Mostrar solo contratos activos:</label>
                 <input type="checkbox" id="buscarActivas">
             </div>
-            <table id="tablaContratos" class="display table table-striped">
+            <table id="tablaInsumos" class="display table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Nombre</th>
+                        <th>Medicamento/th>
                         <th>Descripción</th>
-                        <th>Fecha de Vencimiento</th>
-                        <th>Cliente</th>
-                        <th>Categoría</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
@@ -433,114 +432,68 @@
 
 
         $(document).ready(function () {
-            const tabla = $('#tablaContratos').DataTable({
+            const tabla = $('#tablaInsumos').DataTable({
                 pageLength: 6,
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
                 }
             });
 
-            function cargarContratos(url) {
-                fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        "Content-Type": "application/json",
-                            "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data.result);
-                        if (data.result && Array.isArray(data.result)) {
-                            tabla.clear();
-                            data.result.forEach((contrato, index) => {
-                                const clienteNombre = contrato.cliente ? contrato.cliente.nombre : 'Sin Cliente';
-                                const categoriaNombre = contrato.categorias ? contrato.categorias.nombre : 'Sin Categoría';
-                                tabla.row.add([
-                                    index + 1,
-                                    contrato.nombre,
-                                    contrato.descripcion,
-                                    contrato.fechaVencimiento,
-                                    clienteNombre,
-                                    categoriaNombre,
-                                    contrato.status ? 'Activo' : 'Inactivo',
-                                    
-                                ]).draw();
-                            });
-                        }
-                    })
-                    .catch(console.error);
-            }
+            function cargarInsumos(url) {
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('jwt')}`
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Insumos:', data);  // Verificar los insumos
+        if (data.result && Array.isArray(data.result)) {
+            tabla.clear();
+            
+            data.result.forEach((insumo, index) => {
+                const medicamento = insumo.medicamentos;
 
-
-            cargarContratos('http://localhost:8080/contratos/all');
-
-            $('#buscarActivas').on('change', function () {
-                cargarContratos(this.checked ? 'http://localhost:8080/contratos/status' : 'http://localhost:8080/contratos/all');
+                const medicamentoNombre = medicamento.medicamento || 'Sin Medicamento';
+                const medicamentoDescripcion = medicamento.descripcion || 'Sin Descripción';
+                const medicamentoPrecio = medicamento.precio || 'Sin Precio';
+                
+                // Agregar la fila a la tabla
+                tabla.row.add([
+                    index + 1,
+                    medicamentoNombre,
+                    medicamentoDescripcion,
+                    medicamentoPrecio,
+                    insumo.stock,
+                    insumo.status ? 'Disponible' : 'Agotado/Sin disponibilidad',
+                    
+                   
+                    `<button class="btn btn-primary editar" 
+                        data-id="${insumo.id}" 
+                        data-stock="${insumo.stock}" 
+                        data-descripcion="${insumo.descripcion}" 
+                        data-status="${insumo.status}" 
+                        data-medicamento-id="${medicamento.id}" 
+                        data-medicamento-nombre="${medicamento.medicamento}" 
+                        data-medicamento-precio="${medicamento.precio}">
+                        <i class='bx bx-edit'></i>
+                    </button>
+                    <button class="btn btn-secondary cambiar-status" 
+                        data-id="${insumo.id}" 
+                        data-status="${insumo.status ? 'activo' : 'inactivo'}">
+                        <i class='bx bx-refresh'></i>
+                    </button>`
+                ]).draw();
             });
+        }
+    })
+    .catch(console.error);
+}
 
-            
+cargarInsumos('http://localhost:8080/insumos/all');
 
-            
-
-        });
-        document.addEventListener("DOMContentLoaded", function () {
-            // Función para cargar los clientes
-            function loadClientes() {
-                fetch('http://localhost:8080/clientes/all', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                        const clienteSelect = document.getElementById('nuevoContratoCliente');
-                        if (data.result && Array.isArray(data.result)) {
-                            data.result.forEach(cliente => {
-                                const option = document.createElement('option');
-                                option.value = cliente.id;
-                                option.textContent = cliente.nombre;
-                                clienteSelect.appendChild(option);
-                            });
-                        } else {
-                            console.error('Los datos de clientes no están en el formato esperado.');
-                        }
-                    })
-                    .catch(error => console.error("Error cargando los clientes:", error));
-            }
-
-            // Función para cargar las categorías
-            function loadCategorias() {
-                fetch('http://localhost:8080/categoria/all', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                        const categoriaSelect = document.getElementById('nuevoContratoCategoria');
-                        if (data.result && Array.isArray(data.result)) {
-                            data.result.forEach(categoria => {
-                                const option = document.createElement('option');
-                                option.value = categoria.id;
-                                option.textContent = categoria.nombre;
-                                categoriaSelect.appendChild(option);
-                            });
-                        } else {
-                            console.error('Los datos de categorías no están en el formato esperado.');
-                        }
-                    })
-                    .catch(error => console.error("Error cargando las categorías:", error));
-            }
-
-            loadClientes();
-            loadCategorias();
         });
     </script>
     <!--<script src="../js/access.js"></script> -->

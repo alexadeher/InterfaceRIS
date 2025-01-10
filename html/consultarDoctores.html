@@ -293,12 +293,12 @@
                     <tr>
                         <th>#</th>
                         <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Fecha de Vencimiento</th>
-                        <th>Cliente</th>
-                        <th>Categoría</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
+                        <th>Apellidos</th>
+                        <th>Cédula</th>
+                        <th>Especialidad</th>
+                        <th>Consultorio</th>
+                        <th>Status</th>
+
                     </tr>
                 </thead>
                 <tbody id="contratosBody">
@@ -513,43 +513,46 @@
                 }
             });
 
-            function cargarContratos(url) {
+            function cargarDoctores(url) {
                 fetch(url, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                        'Authorization': `Bearer ${localStorage.getItem('jwt')}`
                     }
                 })
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data.result);
-                        if (data.result && Array.isArray(data.result)) {
-                            tabla.clear();
-                            data.result.forEach((contrato, index) => {
-                                const clienteNombre = contrato.cliente ? contrato.cliente.nombre : 'Sin Cliente';
-                                const categoriaNombre = contrato.categorias ? contrato.categorias.nombre : 'Sin Categoría';
+                        console.log(data.data); // Asegúrate de que `data.data` sea la propiedad que contiene los doctores
+                        if (data.data && Array.isArray(data.data)) {
+                            tabla.clear(); // Limpiar la tabla antes de insertar nuevos datos
+                            data.data.forEach((doctor, index) => {
+                                const turnoNombre = doctor.turno ? doctor.turno.nombre : 'Sin Turno';
                                 tabla.row.add([
                                     index + 1,
-                                    contrato.nombre,
-                                    contrato.descripcion,
-                                    contrato.fechaVencimiento,
-                                    clienteNombre,
-                                    categoriaNombre,
-                                    contrato.status ? 'Activo' : 'Inactivo',
-                                    `<button class="btn btn-primary editar" data-id="${contrato.id}" data-nombre="${contrato.nombre}" data-descripcion="${contrato.descripcion}" data-fechaVencimiento="${contrato.fechaVencimiento}" data-clienteId="${contrato.cliente ? contrato.cliente.id : ''}" data-categoriaId="${contrato.categorias ? contrato.categorias.id : ''}">
-                                        <i class='bx bx-edit'></i>
-                                    </button>
-                                    <button class="btn btn-secondary cambiar-status" 
-                                    data-id="${contrato.id}" 
-                                    data-nombre="${contrato.nombre}" 
-                                    data-descripcion="${contrato.descripcion}" 
-                                    data-fechavencimiento="${contrato.fechaVencimiento}" 
-                                    data-clienteid="${contrato.cliente.id}" 
-                                    data-categoriaid="${contrato.categorias.id}" 
-                                    data-estado="${contrato.status ? 'activo' : 'inactivo'}">
-                                    <i class='bx bx-refresh'></i>
-                                                                </button>`
+                                    doctor.nombre,
+                                    doctor.apellidos,
+                                    doctor.cedula,
+                                    doctor.especialidad,
+                                    doctor.consultorio,
+                                    doctor.status ? 'Activo' : 'Inactivo',
+                                    turnoNombre,
+                                    `<button class="btn btn-primary editar" 
+                                data-id="${doctor.id}" 
+                                data-nombre="${doctor.nombre}" 
+                                data-apellidos="${doctor.apellidos}" 
+                                data-cedula="${doctor.cedula}" 
+                                data-especialidad="${doctor.especialidad}" 
+                                data-consultorio="${doctor.consultorio}" 
+                                data-turno="${doctor.turno ? doctor.turno.id : ''}" 
+                                data-status="${doctor.status}">
+                            <i class='bx bx-edit'></i>
+                        </button>
+                        <button class="btn btn-secondary cambiar-status" 
+                                data-id="${doctor.id}" 
+                                data-status="${doctor.status ? 'activo' : 'inactivo'}">
+                            <i class='bx bx-refresh'></i>
+                        </button>`
                                 ]).draw();
                             });
                         }
@@ -558,7 +561,8 @@
             }
 
 
-            cargarContratos('http://localhost:8080/contratos/all');
+
+            cargarContratos('http://localhost:8080/doctores/all');
 
             $('#buscarActivas').on('change', function () {
                 cargarContratos(this.checked ? 'http://localhost:8080/contratos/actives' : 'http://localhost:8080/contratos/all');
