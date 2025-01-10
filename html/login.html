@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="../css/login.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Enlace al favicon -->
+    <link rel="icon" type="image/png" href="../img/Contratos.png">
+    <script src="../js/passwordVisualizer.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="fade-in">RIS</h1>
+            <h2>Iniciar Sesión</h2>
+            <form id="formLogin" onsubmit="iniciarSesion(event)">
+                <div class="form-element">
+                    <label for="email">Correo</label>
+                    <input type="email" id="email" name="mail" placeholder="correo@gmail.com" required maxlength="60">
+                </div>
+                <div class="form-element">
+                    <label for="password">Contraseña</label>
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" placeholder="••••••••" required
+                            minlength="3" maxlength="30">
+                        <i class="fas fa-eye-slash eye" id="togglePassword" onclick="togglePassword('password')"></i>
+                    </div>
+                </div>
+                <button class="btn" type="submit">Iniciar Sesión</button>
+                <div class="form-element text-center">
+                    <a href="solicitudCambio.html" class="link">¿Olvidaste tu contraseña?</a>
+                </div>
+            </form>
+            <div id="alerta" class="alert" style="display: none;"></div>
+        </div>
+    </div>
+    <script>
+        function iniciarSesion(event) {
+            event.preventDefault();
+
+            const correo = document.getElementById("email").value;
+            const contrasena = document.getElementById("password").value;
+
+            fetch(`http://localhost:8080/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ correo, password: contrasena })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Error: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.jwt) {
+                        const { jwt, userId, correo, role, expirationTime } = data;
+                        console.log(data);
+                        //const role = data.role;
+                        if (role === "ROLE_ADMIN_ACCESS") {
+                            window.location.href = "bienvenida.html"; // Redirigir a la página de admin
+                            localStorage.setItem("jwt", data.jwt); // Guardar token en localStorage
+                            localStorage.setItem("role", data.role);
+                            localStorage.setItem("userId", data.userId);
+                            localStorage.setItem("username", data.username);
+                        } else if(role === "ROLE_GERENTE_ACCESS") {
+                            window.location.href = "bienvenidaGerente.html"; // Redirigir a la página de usuario
+                            localStorage.setItem("jwt", data.jwt); // Guardar token en localStorage
+                            localStorage.setItem("role", data.role);
+                            localStorage.setItem("userId", data.userId);
+                            localStorage.setItem("username", data.username);
+                        }
+                        
+                        //window.location.href = "bienvenida.html";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al iniciar sesión:', error);
+
+                    const alerta = document.getElementById("alerta");
+                    alerta.textContent = "Hubo un error al procesar tu solicitud. Inténtalo más tarde.";
+                    alerta.className = "alert alert-danger";
+                    alerta.style.display = "block";
+                    alerta.style.color = "red"
+
+                    // Ocultar alerta después de 5 segundos
+                    setTimeout(() => {
+                        alerta.style.display = "none";
+                    }, 5000);
+                });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,592 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Consultar Usuarios</title>
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Enlace al favicon -->
+    <link rel="icon" type="image/png" href="../img/Contratos.png">
+    <link rel="stylesheet" href="../css/menu.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+    <style>
+        /* Personalización para la tabla */
+        #tablaUsuarios_wrapper {
+            margin: 20px 0;
+        }
+
+        #tablaUsuarios {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #tablaUsuarios thead {
+            background-color: #4723D9;
+            color: #ffffff;
+        }
+
+        #tablaUsuarios thead th {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #tablaUsuarios tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        #tablaUsuarios tbody tr:hover {
+            background-color: #dce0f6d1;
+        }
+
+        #tablaUsuarios .btn {
+            margin: 0 2px;
+        }
+
+        /* Botones de DataTables */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 6px 12px;
+            margin: 0 2px;
+            border-radius: 4px;
+            background-color: #6c757d;
+            color: white !important;
+            border: none;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background-color: #495057;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background-color: #ced4da;
+            color: white;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            border-radius: 20px;
+            border: 1px solid #ced4da;
+            padding: 5px 10px;
+        }
+
+        /* Estilos para el modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            /* Mantener oculto el modal por defecto */
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal-header {
+            background-color: #4723D9;
+            color: white;
+            padding: 15px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header .btn-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-footer .btn {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #4723D9;
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Botones en el footer */
+        .modal-footer .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+
+        .modal-footer .btn-primary {
+            background-color: #4723D9;
+            border: none;
+        }
+
+        .modal-footer .btn-primary:hover {
+            background-color: #5a34e0;
+        }
+    </style>
+
+</head>
+
+<body id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div>
+                <a href="#" class="nav_logo">
+                    <i class="bx bx-layer nav_logo-icon"></i>
+                    <span class="nav_logo-name">RIS </span>
+                </a>
+                <div class="nav_list">
+                    <!-- Dropdown para Factura -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownContratos" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-folder nav_icon'></i><span class="nav_name">Factura</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownContratos">
+                            <li><a class="dropdown-item" href="agregarFactura.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarFacturas.html">Consultar</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Dropdown para medicamentos -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownUsuarios" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-capsule nav_icon'></i><span class="nav_name">Medicamentos</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownPerfil">
+                            <li><a class="dropdown-item" href="agregarMedicamento.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarMedicamentos.html">Consultar/Actualizar</a></li>
+                        </ul>
+                    </div>
+                    <!-- Dropdown para insumos -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownCategorias" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Insumos</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
+                            <li><a class="dropdown-item" href="agregarInsumo.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarInsumos.html">Consultar/Actualizar</a></li>
+                        </ul>
+                    </div>
+                    <!-- Dropdown para Doctor -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownCategorias" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-shield-plus nav_icon'></i> <span class="nav_name">Doctor</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
+                            <li><a class="dropdown-item" href="agregarDoctor.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarDoctores.html">Consultar/Actualizar</a></li>
+                        </ul>
+                    </div>
+                    <!-- Dropdown para Enfermera -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownCategorias" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-injection nav_icon'></i> <span class="nav_name">Enfermera</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
+                            <li><a class="dropdown-item" href="agregarEnfermera.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarEnfermeras.html">Consultar/Actualizar</a></li>
+                        </ul>
+                    </div>
+                    <!-- Dropdown para Clientes 
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownClientes" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Clientes</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownClientes">
+                            <li><a class="dropdown-item" href="agregarCliente.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarClientes.html">Consultar/Actualizar</a></li>
+
+                        </ul>
+                    </div>-->
+                    <!-- Perfil y Cerrar sesión 
+                    <div class="nav-item dropdown nav-profile">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownUser1" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-wink-smile nav_icon'></i> <span class="nav_name">Perfil</span>
+                        </a>
+                        <ul class="dropdown-menu aria-labelledby=" dropdownUser1">
+                            <li><a class="dropdown-item" href="verPerfil.html">Perfil</a></li>
+                            <li><a class="dropdown-item" href="cambiarContrasenaPerfil.html">Cambiar contraseña</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#" onclick="logout(event)">Cerrar sesión</a></li>
+                        </ul>
+                    </div>-->
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="bg-light">
+        <div class="container mt-5">
+            <h1 class="text-center">Consultar Usuarios</h1>
+            <div class="mb-3">
+                <label for="buscarActivas" class="form-label">Mostrar solo usuarios activos:</label>
+                <input type="checkbox" id="buscarActivas">
+            </div>
+            <table id="tablaUsuarios" class="display table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="usuariosBody">
+                    <!-- Filas dinámicas llenadas con DataTables -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Mensaje de éxito o error -->
+    <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
+    <!-- Modal para actualizar categoría -->
+    <div id="nuevoModalActualizarUsuario" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h5 class="modal-title">Actualizar Usuario</h5>
+                <button type="button" class="btn-close" id="cerrarNuevoModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="nuevoFormActualizarUsuario">
+                    <div class="mb-3">
+                        <label for="nuevoUsuarioNombre" class="form-label fw-bold">Nombre</label>
+                        <input type="text" class="form-control" id="nuevoUsuarioNombre" placeholder="Nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nuevoUsuarioApellidos" class="form-label fw-bold">Apellidos</label>
+                        <input class="form-control" id="nuevoUsuarioApellidos" rows="3" placeholder="Apellidos"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nuevoUsuarioTelefono" class="form-label fw-bold">Teléfono</label>
+                        <input type="number" class="form-control" id="nuevoUsuarioTelefono" rows="3"
+                            placeholder="Apellidos" required maxlength="15" minlength="10" required pattern="^[0-9]{10}$>
+                    </div>
+                    <div class=" mb-3">
+                        <label for="nuevoUsuariCorreo" class="form-label fw-bold">Correo</label>
+                        <input class="form-control" id="nuevoUsuarioCorreo" rows="3" placeholder="Correo" required
+                            disabled>
+                    </div>
+                    <input type="hidden" id="nuevoUsuarioId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cerrarNuevoModalFooter">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="guardarNuevoCambios">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js'></script>
+
+    <!-- jQuery -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+
+            const showNavbar = (toggleId, navId, bodyId, headerId) => {
+                const toggle = document.getElementById(toggleId),
+                    nav = document.getElementById(navId),
+                    bodypd = document.getElementById(bodyId),
+                    headerpd = document.getElementById(headerId)
+
+                // Validate that all variables exist
+                if (toggle && nav && bodypd && headerpd) {
+                    toggle.addEventListener('click', () => {
+                        // show navbar
+                        nav.classList.toggle('show')
+                        // change icon
+                        toggle.classList.toggle('bx-x')
+                        // add padding to body
+                        bodypd.classList.toggle('body-pd')
+                        // add padding to header
+                        headerpd.classList.toggle('body-pd')
+                    })
+                }
+            }
+
+            showNavbar('header-toggle', 'nav-bar', 'body-pd', 'header')
+
+            /*===== LINK ACTIVE =====*/
+            const linkColor = document.querySelectorAll('.nav_link')
+
+            function colorLink() {
+                if (linkColor) {
+                    linkColor.forEach(l => l.classList.remove('active'))
+                    this.classList.add('active')
+                }
+            }
+            linkColor.forEach(l => l.addEventListener('click', colorLink))
+
+            // Your code to run since DOM is loaded and ready
+        });
+
+
+        $(document).ready(function () {
+            const tabla = $('#tablaUsuarios').DataTable({
+                pageLength: 6,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
+                }
+            });
+
+            function cargarUsuarios(url) {
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.result && Array.isArray(data.result)) {
+                            tabla.clear();
+                            data.result.forEach((usuarios, index) => {
+                                tabla.row.add([
+                                    index + 1,
+                                    usuarios.nombre,
+                                    usuarios.apellidos,
+                                    usuarios.telefono,
+                                    usuarios.correo,
+                                    usuarios.status ? 'Activo' : 'Inactivo',
+                                    `<button class="btn btn-primary editar" data-id="${usuarios.id}" data-nombre="${usuarios.nombre}" data-apellidos="${usuarios.apellidos}" data-correo="${usuarios.correo}" data-telefono="${usuarios.telefono}">
+                                    <i class='bx bx-edit'></i>
+                                </button>
+                                <button class="btn btn-secondary cambiar-status" data-id="${usuarios.id}">
+                                    <i class='bx bx-refresh'></i>
+                                </button>`
+                                ]).draw();
+                            });
+                        }
+                    })
+                    .catch(console.error);
+            }
+
+            cargarUsuarios('http://localhost:8080/usuarios/all');
+
+            $('#buscarActivas').on('change', function () {
+                cargarUsuarios(this.checked ? 'http://localhost:8080/usuarios/actives' : 'http://localhost:8080/usuarios/all');
+            });
+
+            $('#tablaUsuarios tbody').on('click', '.cambiar-status', function () {
+                const id = $(this).data('id');
+                const estadoActual = $(this).data('estado'); // Obtener el estado actual
+                const nuevoEstado = estadoActual === 'activo' ? false : true;
+
+                fetch(`http://localhost:8080/usuarios/changeStatus`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        status: nuevoEstado
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const alerta = document.getElementById("alerta");
+
+                        if (data.type === "SUCCESS") {
+                            alerta.textContent = "Estado de usuario actualizado correctamente.";
+                            alerta.className = "alert alert-success";
+                        } else {
+                            alerta.textContent = "Error al cambiar el estado del usuario: " + (data.message || "Error desconocido.");
+                            alerta.className = "alert alert-danger";
+                        }
+
+                        // Muestra la alerta
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+
+                        // Actualiza la tabla o recarga la lista de categorías
+                        cargarUsuarios('http://localhost:8080/usuarios/all');
+                    })
+                    .catch(error => {
+                        console.error('Error al cambiar el estado del usuario:', error);
+                        const alerta = document.getElementById("alerta");
+                        alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                        alerta.className = "alert alert-danger";
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                    });
+            });
+
+
+            const nuevoModal = document.getElementById("nuevoModalActualizarUsuario");
+            const cerrarBotones = [
+                document.getElementById("cerrarNuevoModal"),
+                document.getElementById("cerrarNuevoModalFooter")
+            ];
+            const abrirModal = () => {
+                nuevoModal.style.display = "flex";
+            };
+
+            const cerrarModal = () => {
+                nuevoModal.style.display = "none";
+            };
+
+            cerrarBotones.forEach(btn => btn.addEventListener("click", cerrarModal));
+
+            document.getElementById("guardarNuevoCambios").addEventListener("click", function () {
+                const id = document.getElementById("nuevoUsuarioId").value;
+                const nombre = document.getElementById("nuevoUsuarioNombre").value;
+                const apellidos = document.getElementById("nuevoUsuarioApellidos").value;
+                const correo = document.getElementById("nuevoUsuarioCorreo").value;
+                const telefono = document.getElementById("nuevoUsuarioTelefono").value;
+
+                fetch('http://localhost:8080/usuarios/update', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    },
+                    body: JSON.stringify({ id, nombre, apellidos, correo, telefono })
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error al actualizar usuario');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const alerta = document.getElementById("alerta");
+
+                        if (data.type === "SUCCESS") {
+                            alerta.textContent = "Usuario actualizado exitosamente.";
+                            alerta.className = "alert alert-success";
+                        } else {
+                            alerta.textContent = "Error al actualizar usuario: " + (data.message || "Error desconocido.");
+                            alerta.className = "alert alert-danger";
+                        }
+
+                        // Muestra la alerta
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                        console.log('Usuario actualizado:', data);
+                        // Actualiza la tabla o recarga la lista de categorías
+                        cargarUsuarios('http://localhost:8080/usuarios/all');
+                        cerrarModal();
+
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        const alerta = document.getElementById("alerta");
+                        alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                        alerta.className = "alert alert-danger";
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                    });
+            });
+
+            // apertura del modal con los datos
+            document.getElementById("tablaUsuarios").addEventListener("click", function (e) {
+                if (e.target.closest(".editar")) {
+                    const button = e.target.closest(".editar");
+                    const id = button.getAttribute("data-id");
+                    const nombre = button.getAttribute("data-nombre");
+                    const apellidos = button.getAttribute("data-apellidos");
+                    const telefono = button.getAttribute("data-telefono");
+                    const correo = button.getAttribute("data-correo");
+
+                    document.getElementById("nuevoUsuarioId").value = id;
+                    document.getElementById("nuevoUsuarioNombre").value = nombre;
+                    document.getElementById("nuevoUsuarioApellidos").value = apellidos;
+                    document.getElementById("nuevoUsuarioTelefono").value = telefono;
+                    document.getElementById("nuevoUsuarioCorreo").value = correo;
+
+                    abrirModal();
+                }
+            });
+        });
+    </script>
+    <!--<script src="../js/access.js"></script> -->
+    <script type='text/javascript'>var myLink = document.querySelector('a[href="#"]');
+        myLink.addEventListener('click', function (e) {
+            e.preventDefault();
+        });</script>
+</body>
+
+</html>

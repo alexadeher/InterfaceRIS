@@ -1,0 +1,802 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Consultar Contratos</title>
+    <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
+    <!-- Enlace al favicon -->
+    <link rel="icon" type="image/png" href="../img/Contratos.png">
+    <link rel="stylesheet" href="../css/menu.css">
+    <!-- Bootstrap Datepicker CSS -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+    <style>
+        /* Personalización para la tabla */
+        #tablaContratos_wrapper {
+            margin: 20px 0;
+        }
+
+        #tablaContratos {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #tablaContratos thead {
+            background-color: #4723D9;
+            color: #ffffff;
+        }
+
+        #tablaContratos thead th {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #tablaContratos tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        #tablaContratos tbody tr:hover {
+            background-color: #dce0f6d1;
+        }
+
+        #tablaContratos .btn {
+            margin: 0 2px;
+        }
+
+        /* Botones de DataTables */
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 6px 12px;
+            margin: 0 2px;
+            border-radius: 4px;
+            background-color: #6c757d;
+            color: white !important;
+            border: none;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background-color: #495057;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background-color: #ced4da;
+            color: white;
+        }
+
+        .dataTables_wrapper .dataTables_filter input {
+            border-radius: 20px;
+            border: 1px solid #ced4da;
+            padding: 5px 10px;
+        }
+
+        /* Estilos para el modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            /* Mantener oculto el modal por defecto */
+            justify-content: center;
+            align-items: center;
+            z-index: 1050;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .modal-header {
+            background-color: #4723D9;
+            color: white;
+            padding: 15px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header .btn-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-footer .btn {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-primary {
+            background-color: #4723D9;
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Botones en el footer */
+        .modal-footer .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+        }
+
+        .modal-footer .btn-primary {
+            background-color: #4723D9;
+            border: none;
+        }
+
+        .modal-footer .btn-primary:hover {
+            background-color: #5a34e0;
+        }
+    </style>
+
+
+
+</head>
+
+<body id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div>
+                <a href="#" class="nav_logo">
+                    <i class="bx bx-layer nav_logo-icon"></i>
+                    <span class="nav_logo-name">RIS </span>
+                </a>
+                <div class="nav_list">
+                    <!-- Dropdown para Factura -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownContratos" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-folder nav_icon'></i><span class="nav_name">Factura</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownContratos">
+                            <li><a class="dropdown-item" href="agregarFactura.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarFacturas.html">Consultar</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Dropdown para medicamentos -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownUsuarios" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-capsule nav_icon'></i><span class="nav_name">Medicamentos</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownPerfil">
+                            <li><a class="dropdown-item" href="agregarMedicamento.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarMedicamentos.html">Consultar/Actualizar</a></li>
+                        </ul>
+                    </div>
+                    <!-- Dropdown para insumos -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownCategorias" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-grid-alt nav_icon'></i> <span class="nav_name">Insumos</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
+                            <li><a class="dropdown-item" href="agregarInsumo.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarInsumos.html">Consultar/Actualizar</a></li>
+                        </ul>
+                    </div>
+                    <!-- Dropdown para Doctor -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownCategorias" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-shield-plus nav_icon'></i> <span class="nav_name">Doctor</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
+                            <li><a class="dropdown-item" href="agregarDoctor.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarDoctores.html">Consultar/Actualizar</a></li>
+                        </ul>
+                    </div>
+                    <!-- Dropdown para Enfermera -->
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownCategorias" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-injection nav_icon'></i> <span class="nav_name">Enfermera</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
+                            <li><a class="dropdown-item" href="agregarEnfermera.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarEnfermeras.html">Consultar/Actualizar</a></li>
+                        </ul>
+                    </div>
+                    <!-- Dropdown para Clientes 
+                    <div class="nav-item dropdown">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownClientes" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Clientes</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownClientes">
+                            <li><a class="dropdown-item" href="agregarCliente.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarClientes.html">Consultar/Actualizar</a></li>
+
+                        </ul>
+                    </div>-->
+                    <!-- Perfil y Cerrar sesión 
+                    <div class="nav-item dropdown nav-profile">
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownUser1" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class='bx bx-wink-smile nav_icon'></i> <span class="nav_name">Perfil</span>
+                        </a>
+                        <ul class="dropdown-menu aria-labelledby=" dropdownUser1">
+                            <li><a class="dropdown-item" href="verPerfil.html">Perfil</a></li>
+                            <li><a class="dropdown-item" href="cambiarContrasenaPerfil.html">Cambiar contraseña</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#" onclick="logout(event)">Cerrar sesión</a></li>
+                        </ul>
+                    </div>-->
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="bg-light">
+        <div class="container mt-5">
+            <h1 class="text-center">Consultar Contratos</h1>
+            <div class="mb-3">
+                <label for="buscarActivas" class="form-label">Mostrar solo contratos activos:</label>
+                <input type="checkbox" id="buscarActivas">
+            </div>
+            <table id="tablaContratos" class="display table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Fecha de Vencimiento</th>
+                        <th>Cliente</th>
+                        <th>Categoría</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="contratosBody">
+                    <!-- Filas dinámicas llenadas con DataTables -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Mensaje de éxito o error -->
+    <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
+    <!-- Modal para actualizar contrato -->
+    <div id="nuevoModalActualizarContrato" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h5 class="modal-title">Actualizar Contrato</h5>
+                <button type="button" class="btn-close" id="cerrarNuevoModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="nuevoFormActualizarContrato">
+                    <div class="mb-3">
+                        <label for="nuevoContratoNombre" class="form-label fw-bold">Nombre del Contrato</label>
+                        <input type="text" class="form-control" id="nuevoContratoNombre"
+                            placeholder="Escribe el nombre del contrato" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nuevoContratoDescripcion" class="form-label fw-bold">Descripción</label>
+                        <textarea class="form-control" id="nuevoContratoDescripcion" rows="3"
+                            placeholder="Escribe una descripción" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nuevoContratoFechaVencimiento" class="form-label">Fecha de vencimiento del
+                            contrato</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control datepicker" id="nuevoContratoFechaVencimiento"
+                                placeholder="Selecciona una fecha">
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                            <!-- Icono de calendario -->
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nuevoContratoCliente" class="form-label fw-bold">Cliente</label>
+                        <select class="form-control" id="nuevoContratoCliente">
+                            <option value="">Seleccionar cliente</option>
+                            <!-- Opciones serán cargadas con JavaScript -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nuevoContratoCategoria" class="form-label fw-bold">Categoria</label>
+                        <select class="form-control" id="nuevoContratoCategoria" <option value="">Seleccionar cliente
+                            </option>
+                            <!-- Opciones serán cargadas con JavaScript -->
+                        </select>
+
+                    </div>
+                    <input type="hidden" id="nuevoContratoId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cerrarNuevoModalFooter">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="guardarNuevoCambios">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js'></script>
+
+    <!-- jQuery -->
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+    <!--Container Main end-->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <!--Script de idioma del datepicker-->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#nuevaFechaVencimiento').datepicker({
+                format: 'yyyy-mm-dd', // Formato de fecha
+                autoclose: true,
+                todayHighlight: true, // Resalta la fecha actual
+                language: 'es'       // Configura el idioma a español
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Función para cargar los clientes
+            function loadClientes() {
+                fetch('http://localhost:8080/clientes/all', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        const clienteSelect = document.getElementById('nuevoContratoCliente');
+                        if (data.result && Array.isArray(data.result)) {
+                            data.result.forEach(cliente => {
+                                const option = document.createElement('option');
+                                option.value = cliente.id;
+                                option.textContent = cliente.nombre;
+                                clienteSelect.appendChild(option);
+                            });
+                        } else {
+                            console.error('Los datos de clientes no están en el formato esperado.');
+                        }
+                    })
+                    .catch(error => console.error("Error cargando los clientes:", error));
+            }
+
+            // Función para cargar las categorías
+            function loadCategorias() {
+                fetch('http://localhost:8080/categoria/all', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        const categoriaSelect = document.getElementById('nuevoContratoCategoria');
+                        if (data.result && Array.isArray(data.result)) {
+                            data.result.forEach(categoria => {
+                                const option = document.createElement('option');
+                                option.value = categoria.id;
+                                option.textContent = categoria.nombre;
+                                categoriaSelect.appendChild(option);
+                            });
+                        } else {
+                            console.error('Los datos de categorías no están en el formato esperado.');
+                        }
+                    })
+                    .catch(error => console.error("Error cargando las categorías:", error));
+            }
+
+            loadClientes();
+            loadCategorias();
+        });
+    </script>
+
+    <script>
+        // Función para rellenar los campos del formulario editar 
+        function cargarContratoParaEditar(contrato) {
+            document.getElementById("nuevoContratoId").value = contrato.id;
+            document.getElementById("nuevoContratoNombre").value = contrato.nombre;
+            document.getElementById("nuevoContratoDescripcion").value = contrato.descripcion;
+            document.getElementById("fechaVencimientoContrato").value = contrato.fechaVencimiento;
+            document.getElementById("nuevoContratoCliente").value = contrato.clienteId;
+            document.getElementById("nuevoContratoCategoria").value = contrato.categoriaId;
+        }
+    </script>
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function (event) {
+
+            const showNavbar = (toggleId, navId, bodyId, headerId) => {
+                const toggle = document.getElementById(toggleId),
+                    nav = document.getElementById(navId),
+                    bodypd = document.getElementById(bodyId),
+                    headerpd = document.getElementById(headerId)
+
+                // Validate that all variables exist
+                if (toggle && nav && bodypd && headerpd) {
+                    toggle.addEventListener('click', () => {
+                        // show navbar
+                        nav.classList.toggle('show')
+                        // change icon
+                        toggle.classList.toggle('bx-x')
+                        // add padding to body
+                        bodypd.classList.toggle('body-pd')
+                        // add padding to header
+                        headerpd.classList.toggle('body-pd')
+                    })
+                }
+            }
+
+            showNavbar('header-toggle', 'nav-bar', 'body-pd', 'header')
+
+            /*===== LINK ACTIVE =====*/
+            const linkColor = document.querySelectorAll('.nav_link')
+
+            function colorLink() {
+                if (linkColor) {
+                    linkColor.forEach(l => l.classList.remove('active'))
+                    this.classList.add('active')
+                }
+            }
+            linkColor.forEach(l => l.addEventListener('click', colorLink))
+
+            // Your code to run since DOM is loaded and ready
+        });
+
+
+        $(document).ready(function () {
+            const tabla = $('#tablaContratos').DataTable({
+                pageLength: 6,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
+                }
+            });
+
+            function cargarContratos(url) {
+                fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data.result);
+                        if (data.result && Array.isArray(data.result)) {
+                            tabla.clear();
+                            data.result.forEach((contrato, index) => {
+                                const clienteNombre = contrato.cliente ? contrato.cliente.nombre : 'Sin Cliente';
+                                const categoriaNombre = contrato.categorias ? contrato.categorias.nombre : 'Sin Categoría';
+                                tabla.row.add([
+                                    index + 1,
+                                    contrato.nombre,
+                                    contrato.descripcion,
+                                    contrato.fechaVencimiento,
+                                    clienteNombre,
+                                    categoriaNombre,
+                                    contrato.status ? 'Activo' : 'Inactivo',
+                                    `<button class="btn btn-primary editar" data-id="${contrato.id}" data-nombre="${contrato.nombre}" data-descripcion="${contrato.descripcion}" data-fechaVencimiento="${contrato.fechaVencimiento}" data-clienteId="${contrato.cliente ? contrato.cliente.id : ''}" data-categoriaId="${contrato.categorias ? contrato.categorias.id : ''}">
+                                        <i class='bx bx-edit'></i>
+                                    </button>
+                                    <button class="btn btn-secondary cambiar-status" 
+                                    data-id="${contrato.id}" 
+                                    data-nombre="${contrato.nombre}" 
+                                    data-descripcion="${contrato.descripcion}" 
+                                    data-fechavencimiento="${contrato.fechaVencimiento}" 
+                                    data-clienteid="${contrato.cliente.id}" 
+                                    data-categoriaid="${contrato.categorias.id}" 
+                                    data-estado="${contrato.status ? 'activo' : 'inactivo'}">
+                                    <i class='bx bx-refresh'></i>
+                                                                </button>`
+                                ]).draw();
+                            });
+                        }
+                    })
+                    .catch(console.error);
+            }
+
+
+            cargarContratos('http://localhost:8080/contratos/all');
+
+            $('#buscarActivas').on('change', function () {
+                cargarContratos(this.checked ? 'http://localhost:8080/contratos/actives' : 'http://localhost:8080/contratos/all');
+            });
+
+            $('#tablaContratos tbody').on('click', '.cambiar-status', function () {
+                const id = $(this).data('id');
+                const nombre = $(this).data('nombre');
+                const descripcion = $(this).data('descripcion');
+                const fechaVencimiento = new Date($(this).data('fechavencimiento')).toISOString().split('T')[0];
+                const clienteId = $(this).data('clienteid');
+                const categoriaId = $(this).data('categoriaid');
+                const nuevoEstado = $(this).data('estado') === 'activo' ? false : true;
+
+                console.log({
+                    id,
+                    nombre,
+                    descripcion,
+                    fechaVencimiento,
+                    clienteId,
+                    categoriaId,
+                    status: nuevoEstado
+                });
+
+                fetch(`http://localhost:8080/contratos/change-status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        nombre: nombre,
+                        descripcion: descripcion,
+                        fechaVencimiento: fechaVencimiento,
+                        clienteId: clienteId,
+                        categoriaId: categoriaId,
+                        status: nuevoEstado
+                    })
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Error en la solicitud: ' + response.statusText);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const alerta = document.getElementById("alerta");
+
+                        if (data.type === "SUCCESS") {
+                            alerta.textContent = "Estado del contrato actualizado correctamente.";
+                            alerta.className = "alert alert-success";
+                        } else {
+                            alerta.textContent = "Error al cambiar el estado del contrato: " + (data.message || "Error desconocido.");
+                            alerta.className = "alert alert-danger";
+                        }
+
+                        // Muestra la alerta
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+
+                        // Actualiza la tabla o recarga la lista de contratos
+                        cargarContratos('http://localhost:8080/contratos/all');
+                    })
+                    .catch(error => {
+                        console.error('Error al cambiar el estado del contrato:', error);
+                        const alerta = document.getElementById("alerta");
+                        alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                        alerta.className = "alert alert-danger";
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                    });
+            });
+
+            const nuevoModal = document.getElementById("nuevoModalActualizarContrato");
+            const cerrarBotones = [
+                document.getElementById("cerrarNuevoModal"),
+                document.getElementById("cerrarNuevoModalFooter")
+            ];
+            const abrirModal = () => {
+                nuevoModal.style.display = "flex";
+            };
+
+            const cerrarModal = () => {
+                nuevoModal.style.display = "none";
+            };
+
+            cerrarBotones.forEach(btn => btn.addEventListener("click", cerrarModal));
+
+            document.getElementById("guardarNuevoCambios").addEventListener("click", function () {
+                const id = document.getElementById("nuevoContratoId").value;
+                const nombre = document.getElementById("nuevoContratoNombre").value;
+                const descripcion = document.getElementById("nuevoContratoDescripcion").value;
+                const fechaVencimiento = document.getElementById("nuevoContratoFechaVencimiento").value;
+                const clienteId = document.getElementById("nuevoContratoCliente").value;
+                const categoriaId = document.getElementById("nuevoContratoCategoria").value;
+
+                console.log("Datos a enviar:", { id, nombre, descripcion, fechaVencimiento, clienteId, categoriaId });
+
+                const datosEnvio = {
+                    id,
+                    nombre,
+                    descripcion,
+                    fechaVencimiento,
+                    clienteId: Number(clienteId),
+                    categoriaId: Number(categoriaId)
+                };
+                fetch('http://localhost:8080/contratos/update', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    },
+                    body: JSON.stringify(datosEnvio)
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Error al actualizar el contrato');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const alerta = document.getElementById("alerta");
+
+                        if (data.type === "SUCCESS") {
+                            alerta.textContent = "Contrato actualizado exitosamente.";
+                            alerta.className = "alert alert-success";
+                        } else {
+                            alerta.textContent = "Error al actualizar el contrato: " + (data.message || "Error desconocido.");
+                            alerta.className = "alert alert-danger";
+                        }
+
+                        // Muestra la alerta
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                        console.log('Contrato actualizado:', data);
+                        // Actualiza la tabla o recarga la lista de contratos
+                        cargarContratos('http://localhost:8080/contratos/all');
+                        cerrarModal();
+
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        const alerta = document.getElementById("alerta");
+                        alerta.textContent = "Hubo un error al procesar tu solicitud.";
+                        alerta.className = "alert alert-danger";
+                        alerta.style.display = "block";
+
+                        // Oculta la alerta después de 5 segundos
+                        setTimeout(() => {
+                            alerta.style.display = "none";
+                        }, 5000);
+                    });
+            });
+
+            document.getElementById("tablaContratos").addEventListener("click", function (e) {
+                if (e.target.closest(".editar")) {
+                    const button = e.target.closest(".editar");
+                    const id = button.getAttribute("data-id");
+                    const nombre = button.getAttribute("data-nombre");
+                    const descripcion = button.getAttribute("data-descripcion");
+                    const fechaVencimiento = button.getAttribute("data-fechaVencimiento");
+                    const clienteId = button.getAttribute("data-clienteId");
+                    const categoriaId = button.getAttribute("data-categoriaId");
+
+                    // Rellenar los campos del formulario
+                    document.getElementById("nuevoContratoId").value = id;
+                    document.getElementById("nuevoContratoNombre").value = nombre;
+                    document.getElementById("nuevoContratoDescripcion").value = descripcion;
+                    document.getElementById("nuevoContratoFechaVencimiento").value = fechaVencimiento;
+
+                    // Establecer los valores de cliente y categoría en los `select`
+                    Promise.all([
+                        fetch(`http://localhost:8080/clientes/all`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                            }
+                        }).then(response => response.json()),
+                        fetch(`http://localhost:8080/categoria/all`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                            }
+                        }).then(response => response.json())
+                    ])
+                        .then(([clientesData, categoriasData]) => {
+                            const clienteSelect = document.getElementById("nuevoContratoCliente");
+                            clienteSelect.innerHTML = `<option value="">Seleccionar cliente</option>`;
+                            clientesData.result.forEach(cliente => {
+                                const option = document.createElement("option");
+                                option.value = cliente.id;
+                                option.textContent = cliente.nombre;
+                                if (cliente.id == clienteId) {
+                                    option.selected = true;
+                                }
+                                clienteSelect.appendChild(option);
+                            });
+
+                            const categoriaSelect = document.getElementById("nuevoContratoCategoria");
+                            categoriaSelect.innerHTML = `<option value="">Seleccionar categoría</option>`;
+                            categoriasData.result.forEach(categoria => {
+                                const option = document.createElement("option");
+                                option.value = categoria.id;
+                                option.textContent = categoria.nombre;
+                                if (categoria.id == categoriaId) {
+                                    option.selected = true;
+                                }
+                                categoriaSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => {
+                            console.error("Error al cargar clientes o categorías:", error);
+                        });
+
+                    abrirModal();
+                }
+            });
+
+        });
+    </script>
+    <!--<script src="../js/access.js"></script> -->
+    <script type='text/javascript'>var myLink = document.querySelector('a[href="#"]');
+        myLink.addEventListener('click', function (e) {
+            e.preventDefault();
+        });</script>
+</body>
+
+</html>

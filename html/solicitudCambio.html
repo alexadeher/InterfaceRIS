@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar cambio de contraseña</title>
+    <link rel="stylesheet" href="../css/login.css">
+    <!-- Enlace al favicon -->
+    <link rel="icon" type="image/png" href="../img/Contratos.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="fade-in">RIS</h1>
+            <h2>Solicitar cambio de contraseña</h2>
+            <form id="formLogin" method="post" action="/send-email">
+                <div class="form-element">
+                    <label for="email">Correo</label>
+                    <input type="email" id="email" name="mail" placeholder="correo@gmail.com" required>
+                </div>
+                
+                <button class="btn" type="submit">Solicitar cambio</button>
+                <div class="form-element text-center">
+                     <a href="login.html" class="link">Volver...</a>
+                </div>
+            </form>
+        </div>
+    </div>
+<script src="../js/passwordVisualizer.js"></script>
+<script>
+    document.getElementById("formLogin").addEventListener("submit", function(event) {
+        event.preventDefault();  // Evita que se recargue la página al enviar el formulario
+
+        // Obtener el valor del correo
+        const email = document.getElementById("email").value;
+
+        // Enviar el correo al backend usando fetch
+        fetch("http://localhost:8080/usuarios/send-email", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ correo: email }) 
+        })
+        .then(response => response.json())  // Procesamos la respuesta como JSON
+        .then(data => {
+            // Mostrar un mensaje de éxito o error dependiendo de la respuesta
+            alert(data.message);  // Muestra el mensaje del backend
+            if (data.type === "SUCCESS") {
+                localStorage.setItem('userEmail', email);
+                window.location.href = "verificarCodigo.html";  // Redirige a login si el correo fue enviado correctamente
+            }
+        })
+        .catch(error => {
+            // En caso de que ocurra algún error con la solicitud
+            console.error("Error al enviar el correo:", error);
+            alert("Hubo un error al enviar el correo.");
+        });
+    });
+</script>
+
+</body>
+
+</html>
