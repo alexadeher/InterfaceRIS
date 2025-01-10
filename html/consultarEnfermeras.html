@@ -288,6 +288,7 @@
                         <th>Apellidos</th>
                         <th>Area trabajo</th>
                         <th>Años de experiencia</th>
+                        <th>Turno</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -328,6 +329,14 @@
                         <label for="aniosExperiencia" class="form-label">Tiempo de Experiencia:</label>
                         <input type="number" class="form-control" id="aniosExperiencia"
                             placeholder="Escribe los años de experiencia" maxlength="30">
+                    </div>
+                    <div class="mb-3">
+                        <label for="turno" class="form-label">Turno</label>
+                        <select class="form-control" id="turno" name="turno" required>
+                            <option value="" disabled>Seleccionar turno</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                        </select>
                     </div>
                     <input type="hidden" id="nuevoenfermeraId">
                 </form>
@@ -414,8 +423,9 @@
                                     enfermera.apellidos,
                                     enfermera.areaTrabajo,
                                     enfermera.aniosExperiencia,
+                                    enfermera.turno ? enfermera.turno : 'Sin Turno',
                                     enfermera.status ? 'Activo' : 'Inactivo',
-                                    `<button class="btn btn-primary editar" data-id="${enfermera.id}" data-nombre="${enfermera.nombre}" data-apellidos="${enfermera.apellidos}" data-area="${enfermera.areaTrabajo}" data-anios="${enfermera.aniosExperiencia}">
+                                    `<button class="btn btn-primary editar" data-id="${enfermera.id}" data-nombre="${enfermera.nombre}" data-apellidos="${enfermera.apellidos}" data-area="${enfermera.areaTrabajo}" data-anios="${enfermera.aniosExperiencia}" data-turno="${enfermera.turno}">
                                     <i class='bx bx-edit'></i>
                                 </button>
                                 <button class="btn btn-secondary cambiar-status" data-id="${enfermera.id}">
@@ -508,13 +518,14 @@
                 const apellidos = document.getElementById("apellidos").value;
                 const areaTrabajo = document.getElementById("areaTrabajo").value;
                 const aniosExperiencia = document.getElementById("aniosExperiencia").value;
+                const turno = document.getElementById("turno").value;
 
                 fetch('http://localhost:8080/enfermeras/update', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json',
                         "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                      },
-                    body: JSON.stringify({ id, nombre, apellidos, areaTrabajo, aniosExperiencia })
+                    body: JSON.stringify({ id, nombre, apellidos, areaTrabajo, aniosExperiencia, turno })
                 })
                     .then(response => {
                         if (!response.ok) throw new Error('Error al actualizar enfermera');
@@ -567,12 +578,14 @@
                     const apellidos = button.getAttribute("data-apellidos");
                     const area = button.getAttribute("data-area");
                     const anios = button.getAttribute("data-anios");
+                    const turno = button.getAttribute("data-turno");
 
                     document.getElementById("nuevoenfermeraId").value = id;
                     document.getElementById("nombre").value = nombre;
                     document.getElementById("apellidos").value = apellidos;
                     document.getElementById("areaTrabajo").value = area;
                     document.getElementById("aniosExperiencia").value = anios;
+                    document.getElementById("turno").value = turno;
 
                     abrirModal();
                 }

@@ -297,6 +297,7 @@
                         <th>Cédula</th>
                         <th>Especialidad</th>
                         <th>Consultorio</th>
+                        <th>Turno</th>
                         <th>Status</th>
                         <th>Acciones</th>
 
@@ -343,6 +344,14 @@
                         <label for="consultorio" class="form-label">Consultorio:</label>
                         <input type="text" class="form-control" id="consultorio"
                             placeholder="Escribe el Consultorio" maxlength="70" required >
+                    </div>
+                    <div class="mb-3">
+                        <label for="turno" class="form-label">Turno</label>
+                        <select class="form-control" id="turno" name="turno" required>
+                            <option value="" disabled>Seleccionar turno</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
+                        </select>
                     </div>
                     <input type="hidden" id="nuevoContratoId">
                 </form>
@@ -465,6 +474,7 @@
                                     doctor.cedula,
                                     doctor.especialidad,
                                     doctor.consultorio,
+                                    doctor.turno ? doctor.turno : 'Sin Turno',
                                     doctor.status ? 'Activo' : 'Inactivo',
                                     //turnoNombre,
                                     `<button class="btn btn-primary editar" 
@@ -474,7 +484,7 @@
                                 data-cedula="${doctor.cedula}" 
                                 data-especialidad="${doctor.especialidad}" 
                                 data-consultorio="${doctor.consultorio}" 
-                                data-turno="${doctor.turno ? doctor.turno.id : ''}" 
+                                data-turno="${doctor.turno ? doctor.turno: ''}" 
                                 data-status="${doctor.status}">
                             <i class='bx bx-edit'></i>
                         </button>
@@ -579,6 +589,7 @@
                 const cedula = document.getElementById("cedula").value;
                 const especialidad = document.getElementById("especialidad").value;
                 const consultorio = document.getElementById("consultorio").value;
+                const turno = document.getElementById("turno").value;
 
                 //console.log("Datos a enviar:", { id, nombre, descripcion, fechaVencimiento, clienteId, categoriaId });
 
@@ -588,7 +599,8 @@
                     apellidos,
                     cedula,
                     especialidad,
-                    consultorio
+                    consultorio,
+                    turno
                 };
                 fetch('http://localhost:8080/doctores/update', {
                     method: 'PUT',
@@ -649,6 +661,7 @@
                     const cedula = button.getAttribute("data-cedula");
                     const especialidad = button.getAttribute("data-especialidad");
                     const consultorio = button.getAttribute("data-consultorio");
+                    const turno = button.getAttribute("data-turno");
 
                     // Rellenar los campos del formulario
                     document.getElementById("nuevoContratoId").value = id;
@@ -657,6 +670,7 @@
                     document.getElementById("cedula").value = cedula;
                     document.getElementById("especialidad").value = especialidad;
                     document.getElementById("consultorio").value = consultorio;
+                    document.getElementById("turno").value = turno;
 
 
                     abrirModal();

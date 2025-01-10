@@ -147,14 +147,14 @@
                         <input type="text" class="form-control" id="consultorio"
                             placeholder="Escribe el Consultorio" maxlength="70" required >
                     </div>
-                    <!--<div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
-                        <select class="form-control" id="status" name="status" required>
-                            <option value="">Seleccionar Estado</option>
-                            <option value="TRUE">Inactivo</option>
-                            <option value="FALSE">Activo</option>
+                    <div class="mb-3">
+                        <label for="turno" class="form-label">Turno</label>
+                        <select class="form-control" id="turno" name="turno" required>
+                            <option value="" disabled>Seleccionar turno</option>
+                            <option value="Matutino">Matutino</option>
+                            <option value="Vespertino">Vespertino</option>
                         </select>
-                    </div>-->
+                    </div>
                     
                     <button type="submit" class="btn btn-primary">Agregar Doctor</button>
                 </form>
@@ -220,13 +220,15 @@
                 const cedula = document.getElementById("cedula").value;
                 const especialidad = document.getElementById("especialidad").value;
                 const consultorio = document.getElementById("consultorio").value;
+                const turno = document.getElementById("turno").value;
 
                 const data = {
                     nombre: nombre,
                     apellidos: apellidos,
                     cedula: cedula,
                     especialidad: especialidad,
-                    consultorio: consultorio
+                    consultorio: consultorio,
+                    turno: turno
                 };
 
                 fetch('http://localhost:8080/doctores/save', {
@@ -259,6 +261,7 @@
                         document.getElementById("cedula").value = "";
                         document.getElementById("especialidad").value = "";
                         document.getElementById("consultorio").value = "";
+                        document.getElementById("turno").value = "";
                         // Muestra la alerta
                         alerta.style.display = "block";
 
