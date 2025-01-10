@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Agregar categoría</title>
+    <title>Agregar facturas</title>
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
@@ -39,7 +39,7 @@
                                 <li><a class="dropdown-item" href="consultarFacturas.html">Consultar</a></li>
                             </ul>
                         </div>
-    
+
                         <!-- Dropdown para medicamentos -->
                         <div class="nav-item dropdown">
                             <a class="nav_link dropdown-toggle" href="#" id="dropdownUsuarios" role="button"
@@ -48,7 +48,8 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownPerfil">
                                 <li><a class="dropdown-item" href="agregarMedicamento.html">Agregar</a></li>
-                                <li><a class="dropdown-item" href="consultarMedicamentos.html">Consultar/Actualizar</a></li>
+                                <li><a class="dropdown-item" href="consultarMedicamentos.html">Consultar/Actualizar</a>
+                                </li>
                             </ul>
                         </div>
                         <!-- Dropdown para insumos -->
@@ -81,7 +82,8 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
                                 <li><a class="dropdown-item" href="agregarEnfermera.html">Agregar</a></li>
-                                <li><a class="dropdown-item" href="consultarEnfermeras.html">Consultar/Actualizar</a></li>
+                                <li><a class="dropdown-item" href="consultarEnfermeras.html">Consultar/Actualizar</a>
+                                </li>
                             </ul>
                         </div>
                         <!-- Dropdown para Clientes 
@@ -134,16 +136,22 @@
                     </div>
                     <div class="mb-3">
                         <label for="factura" class="form-label">Factura</label>
-                        <input type="text" class="form-control" id="factura"
-                            placeholder="Escribe la factura" maxlength="30" required>
+                        <input type="text" class="form-control" id="factura" placeholder="Escribe la factura"
+                            maxlength="30" required>
                     </div>
-                    
+                    <div class="mb-3">
+                        <label for="medicamento" class="form-label">Medicamento</label>
+                        <select class="form-control" id="medicamento" name="medicamento" required>
+                            <option value="">Seleccionar Medicamento</option>
+                        </select>
+                    </div>
+
                     <button type="submit" class="btn btn-primary">Agregar Factura</button>
                 </form>
             </div>
         </div>
 
-        
+
         <!-- ALERT para Mensaje de éxito o error -->
         <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
 
@@ -194,18 +202,20 @@
 
 
             // Lógica para enviar datos, mostrar y ocultar la alerta
-            document.getElementById("categoriaForm").addEventListener("submit", function (e) {
+            document.getElementById("facturaForm").addEventListener("submit", function (e) {
                 e.preventDefault(); // Evita el envío tradicional del formulario
 
-                const nombre = document.getElementById("nombreCategoria").value;
-                const descripcion = document.getElementById("descripcionCategoria").value;
+                const total = document.getElementById("total").value;
+                const factura = document.getElementById("factura").value;
+                const medicamento = document.getElementById("medicamento").value;
 
                 const data = {
-                    nombre: nombre,
-                    descripcion: descripcion
+                    concepto: factura,
+                    total: total,
+                    medicamentoId: medicamento
                 };
 
-                fetch('http://localhost:8080/categoria/save', {
+                fetch('http://localhost:8080/facturas/save', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -222,14 +232,15 @@
                         const alerta = document.getElementById("alerta");
 
                         if (data.type === "SUCCESS") {
-                            alerta.textContent = "Categoría agregada exitosamente.";
+                            alerta.textContent = "Factura agregada exitosamente.";
                             alerta.className = "alert alert-success";
                         } else {
-                            alerta.textContent = "Error al agregar la categoría: " + (data.message || "Error desconocido.");
+                            alerta.textContent = "Error al agregar la factura: " + (data.message || "Error desconocido.");
                             alerta.className = "alert alert-danger";
                         }
-                        document.getElementById("nombreCategoria").value = "";
-                        document.getElementById("descripcionCategoria").value = "";
+                        document.getElementById("factura").value = "";
+                        document.getElementById("medicamento").value = "";
+                        document.getElementById("total").value = "";
                         // Muestra la alerta
                         alerta.style.display = "block";
 
@@ -251,7 +262,34 @@
                         }, 5000);
                     });
             });
+            // Función para cargar las categorías
+            function loadMeds() {
+                fetch('http://localhost:8080/medicamentos/all', {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${localStorage.getItem("jwt")}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        const medsSelect = document.getElementById('medicamento');
+                        if (data.result && Array.isArray(data.result)) {
+                            data.result.forEach(medicamento => {
+                                const option = document.createElement('option');
+                                option.value = medicamento.id;
+                                option.textContent = medicamento.medicamento;
+                                medsSelect.appendChild(option);
+                            });
+                        } else {
+                            console.error('Los datos de categorías no están en el formato esperado.');
+                        }
+                    })
+                    .catch(error => console.error("Error cargando las categorías:", error));
+            }
 
+            loadMeds();
 
 
         </script>
