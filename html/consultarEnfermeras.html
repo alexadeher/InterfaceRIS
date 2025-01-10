@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <title>Consultar Clientes</title>
+    <title>Consultar enfermeras</title>
     <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css' rel='stylesheet'>
     <!-- Enlace al favicon -->
@@ -15,36 +15,36 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
     <style>
         /* Personalización para la tabla */
-        #tablaCategorias_wrapper {
+        #tablaEnfermeras_wrapper {
             margin: 20px 0;
         }
 
-        #tablaClientes {
+        #tablaEnfermeras {
             border: 1px solid #ddd;
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        #tablaClientes thead {
+        #tablaEnfermeras thead {
             background-color: #4723D9;
             color: #ffffff;
         }
 
-        #tablaClientes thead th {
+        #tablaEnfermeras thead th {
             text-align: center;
             font-weight: bold;
         }
 
-        #tablaClientes tbody tr {
+        #tablaEnfermeras tbody tr {
             transition: background-color 0.2s ease;
         }
 
-        #tablaClientes tbody tr:hover {
+        #tablaEnfermeras tbody tr:hover {
             background-color: #dce0f6d1;
         }
 
-        #tablaClientes .btn {
+        #tablaEnfermeras .btn {
             margin: 0 2px;
         }
 
@@ -240,15 +240,15 @@
                             <li><a class="dropdown-item" href="consultarEnfermeras.html">Consultar/Actualizar</a></li>
                         </ul>
                     </div>
-                    <!-- Dropdown para Clientes 
+                    <!-- Dropdown para enfermeras 
                     <div class="nav-item dropdown">
-                        <a class="nav_link dropdown-toggle" href="#" id="dropdownClientes" role="button"
+                        <a class="nav_link dropdown-toggle" href="#" id="dropdownenfermeras" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Clientes</span>
+                            <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">enfermeras</span>
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownClientes">
-                            <li><a class="dropdown-item" href="agregarCliente.html">Agregar</a></li>
-                            <li><a class="dropdown-item" href="consultarClientes.html">Consultar/Actualizar</a></li>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownenfermeras">
+                            <li><a class="dropdown-item" href="agregarenfermera.html">Agregar</a></li>
+                            <li><a class="dropdown-item" href="consultarenfermeras.html">Consultar/Actualizar</a></li>
 
                         </ul>
                     </div>-->
@@ -275,19 +275,19 @@
     <!-- Contenido principal -->
     <div class="bg-light">
         <div class="container mt-5">
-            <h1 class="text-center">Consultar Clientes</h1>
+            <h1 class="text-center">Consultar Enfermeras</h1>
             <div class="mb-3">
-                <label for="buscarActivas" class="form-label">Mostrar solo clientes activos:</label>
+                <label for="buscarActivas" class="form-label">Mostrar solo enfermeras activos:</label>
                 <input type="checkbox" id="buscarActivas">
             </div>
-            <table id="tablaClientes" class="display table table-striped">
+            <table id="tablaEnfermeras" class="display table table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Nombre</th>
                         <th>Apellidos</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
+                        <th>Area trabajo</th>
+                        <th>Años de experiencia</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -301,35 +301,35 @@
     <!-- Mensaje de éxito o error -->
     <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
     <!-- Modal para actualizar categoría -->
-    <div id="nuevoModalActualizarCliente" class="modal-overlay">
+    <div id="nuevoModalActualizarenfermera" class="modal-overlay">
         <div class="modal-container">
             <div class="modal-header">
-                <h5 class="modal-title">Actualizar Categoría</h5>
+                <h5 class="modal-title">Actualizar Enfermera</h5>
                 <button type="button" class="btn-close" id="cerrarNuevoModal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="nuevoFormActualizarCliente">
+                <form id="nuevoFormActualizarenfermera">
                     <div class="mb-3">
-                        <label for="nuevoClienteNombre" class="form-label fw-bold">Nombre</label>
-                        <input type="text" class="form-control" id="nuevoClienteNombre"
-                            placeholder="Escribe el nombre del cliente" required>
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre"
+                            placeholder="Escribe el nombre de la Enfermera" maxlength="30">
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoClienteApellidos" class="form-label fw-bold">Apellidos</label>
-                        <input type="text" class="form-control" id="nuevoClienteApellidos"
-                            placeholder="Escribe los apellidos del cliente" required>
+                        <label for="apellidos" class="form-label">Apellidos:</label>
+                        <input class="form-control" id="apellidos"
+                            placeholder="Escribe los apellidos de la enfermera" maxlength="30"></input>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoClienteCorreo" class="form-label fw-bold">Correo</label>
-                        <input type="email" class="form-control" id="nuevoClienteCorreo" rows="3"
-                            placeholder="Escribe una descripción" required>
+                        <label for="areaTrabajo" class="form-label">Área de Trabajo:</label>
+                        <input class="form-control" id="areaTrabajo"
+                            placeholder="Escribe el área de trabajo" maxlength="70"></input>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevoClienteTelefono" class="form-label fw-bold">Teléfono</label>
-                        <input class="form-control" id="nuevoClienteTelefono" rows="3"
-                            placeholder="Escribe una nuevo teléfono" required>
+                        <label for="aniosExperiencia" class="form-label">Tiempo de Experiencia:</label>
+                        <input type="number" class="form-control" id="aniosExperiencia"
+                            placeholder="Escribe los años de experiencia" maxlength="30">
                     </div>
-                    <input type="hidden" id="nuevoClienteId">
+                    <input type="hidden" id="nuevoenfermeraId">
                 </form>
             </div>
             <div class="modal-footer">
@@ -390,14 +390,14 @@
 
         
         $(document).ready(function () {
-            const tabla = $('#tablaClientes').DataTable({
+            const tabla = $('#tablaEnfermeras').DataTable({
                 pageLength: 6,
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
                 }
             });
 
-            function cargarClientes(url) {
+            function cargarEnfermeras(url) {
                 fetch(url, { method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -407,18 +407,18 @@
                     .then(data => {
                         if (data.result && Array.isArray(data.result)) {
                             tabla.clear();
-                            data.result.forEach((cliente, index) => {
+                            data.result.forEach((enfermera, index) => {
                                 tabla.row.add([
                                     index + 1,
-                                    cliente.nombre,
-                                    cliente.apellidos,
-                                    cliente.correo,
-                                    cliente.telefono,
-                                    cliente.status ? 'Activo' : 'Inactivo',
-                                    `<button class="btn btn-primary editar" data-id="${cliente.id}" data-nombre="${cliente.nombre}" data-apellidos="${cliente.apellidos}" data-correo="${cliente.correo}" data-telefono="${cliente.telefono}">
+                                    enfermera.nombre,
+                                    enfermera.apellidos,
+                                    enfermera.areaTrabajo,
+                                    enfermera.aniosExperiencia,
+                                    enfermera.status ? 'Activo' : 'Inactivo',
+                                    `<button class="btn btn-primary editar" data-id="${enfermera.id}" data-nombre="${enfermera.nombre}" data-apellidos="${enfermera.apellidos}" data-area="${enfermera.areaTrabajo}" data-anios="${enfermera.aniosExperiencia}">
                                     <i class='bx bx-edit'></i>
                                 </button>
-                                <button class="btn btn-secondary cambiar-status" data-id="${cliente.id}">
+                                <button class="btn btn-secondary cambiar-status" data-id="${enfermera.id}">
                                     <i class='bx bx-refresh'></i>
                                 </button>`
                                 ]).draw();
@@ -428,26 +428,25 @@
                     .catch(console.error);
             }
 
-            cargarClientes('http://localhost:8080/clientes/all');
+            cargarEnfermeras('http://localhost:8080/enfermeras/all');
 
             $('#buscarActivas').on('change', function () {
-                cargarClientes(this.checked ? 'http://localhost:8080/clientes/actives' : 'http://localhost:8080/clientes/all');
+                cargarEnfermeras(this.checked ? 'http://localhost:8080/enfermeras/actives' : 'http://localhost:8080/enfermeras/all');
             });
 
-            $('#tablaClientes tbody').on('click', '.cambiar-status', function () {
+            $('#tablaEnfermeras tbody').on('click', '.cambiar-status', function () {
                 const id = $(this).data('id');
                 const estadoActual = $(this).data('estado'); // Obtener el estado actual
                 const nuevoEstado = estadoActual === 'activo' ? false : true;
 
-                fetch(`http://localhost:8080/clientes/changeStatus`, {
+                fetch(`http://localhost:8080/enfermeras/changeStatus`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                     },
                     body: JSON.stringify({
-                        id: id,
-                        status: nuevoEstado
+                        id: id
                     })
                 })
                     .then(response => response.json())
@@ -455,10 +454,10 @@
                         const alerta = document.getElementById("alerta");
 
                         if (data.type === "SUCCESS") {
-                            alerta.textContent = "Estado del cliente actualizado correctamente.";
+                            alerta.textContent = "Estado del enfermera actualizado correctamente.";
                             alerta.className = "alert alert-success";
                         } else {
-                            alerta.textContent = "Error al cambiar el estado del cliente: " + (data.message || "Error desconocido.");
+                            alerta.textContent = "Error al cambiar el estado del enfermera: " + (data.message || "Error desconocido.");
                             alerta.className = "alert alert-danger";
                         }
 
@@ -471,7 +470,7 @@
                         }, 5000);
 
                         // Actualiza la tabla o recarga la lista de categorías
-                        cargarClientes('http://localhost:8080/clientes/all');
+                        cargarEnfermeras('http://localhost:8080/enfermeras/all');
                     })
                     .catch(error => {
                         console.error('Error al cambiar el estado de la categoría:', error);
@@ -488,7 +487,7 @@
             });
 
 
-            const nuevoModal = document.getElementById("nuevoModalActualizarCliente");
+            const nuevoModal = document.getElementById("nuevoModalActualizarenfermera");
             const cerrarBotones = [
                 document.getElementById("cerrarNuevoModal"),
                 document.getElementById("cerrarNuevoModalFooter")
@@ -504,31 +503,31 @@
             cerrarBotones.forEach(btn => btn.addEventListener("click", cerrarModal));
 
             document.getElementById("guardarNuevoCambios").addEventListener("click", function () {
-                const id = document.getElementById("nuevoClienteId").value;
-                const nombre = document.getElementById("nuevoClienteNombre").value;
-                const apellidos = document.getElementById("nuevoClienteApellidos").value;
-                const correo = document.getElementById("nuevoClienteCorreo").value;
-                const telefono = document.getElementById("nuevoClienteTelefono").value;
+                const id = document.getElementById("nuevoenfermeraId").value;
+                const nombre = document.getElementById("nombre").value;
+                const apellidos = document.getElementById("apellidos").value;
+                const areaTrabajo = document.getElementById("areaTrabajo").value;
+                const aniosExperiencia = document.getElementById("aniosExperiencia").value;
 
-                fetch('http://localhost:8080/clientes/update', {
+                fetch('http://localhost:8080/enfermeras/update', {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json',
                         "Authorization": `Bearer ${localStorage.getItem("jwt")}`
                      },
-                    body: JSON.stringify({ id, nombre, apellidos, correo, telefono })
+                    body: JSON.stringify({ id, nombre, apellidos, areaTrabajo, aniosExperiencia })
                 })
                     .then(response => {
-                        if (!response.ok) throw new Error('Error al actualizar cliente');
+                        if (!response.ok) throw new Error('Error al actualizar enfermera');
                         return response.json();
                     })
                     .then(data => {
                         const alerta = document.getElementById("alerta");
 
                         if (data.type === "SUCCESS") {
-                            alerta.textContent = "Cliente actualizado exitosamente.";
+                            alerta.textContent = "enfermera actualizado exitosamente.";
                             alerta.className = "alert alert-success";
                         } else {
-                            alerta.textContent = "Error al actualizar cliente: " + (data.message || "Error desconocido.");
+                            alerta.textContent = "Error al actualizar enfermera: " + (data.message || "Error desconocido.");
                             alerta.className = "alert alert-danger";
                         }
 
@@ -540,8 +539,8 @@
                             alerta.style.display = "none";
                         }, 5000);
                         console.log('Categoría actualizada:', data);
-                        // Actualiza la tabla o recarga la lista de clientes
-                        cargarClientes('http://localhost:8080/clientes/all');
+                        // Actualiza la tabla o recarga la lista de enfermeras
+                        cargarEnfermeras('http://localhost:8080/enfermeras/all');
                         cerrarModal();
 
                     })
@@ -560,20 +559,20 @@
             });
 
             // apertura del modal con los datos
-            document.getElementById("tablaClientes").addEventListener("click", function (e) {
+            document.getElementById("tablaEnfermeras").addEventListener("click", function (e) {
                 if (e.target.closest(".editar")) {
                     const button = e.target.closest(".editar");
                     const id = button.getAttribute("data-id");
                     const nombre = button.getAttribute("data-nombre");
                     const apellidos = button.getAttribute("data-apellidos");
-                    const correo = button.getAttribute("data-correo");
-                    const telefono = button.getAttribute("data-telefono");
+                    const area = button.getAttribute("data-area");
+                    const anios = button.getAttribute("data-anios");
 
-                    document.getElementById("nuevoClienteId").value = id;
-                    document.getElementById("nuevoClienteNombre").value = nombre;
-                    document.getElementById("nuevoClienteApellidos").value = nombre;
-                    document.getElementById("nuevoClienteTelefono").value = telefono;
-                    document.getElementById("nuevoClienteCorreo").value = correo;
+                    document.getElementById("nuevoenfermeraId").value = id;
+                    document.getElementById("nombre").value = nombre;
+                    document.getElementById("apellidos").value = apellidos;
+                    document.getElementById("areaTrabajo").value = area;
+                    document.getElementById("aniosExperiencia").value = anios;
 
                     abrirModal();
                 }
