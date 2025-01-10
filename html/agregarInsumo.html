@@ -119,30 +119,25 @@
         <div class="bg-light">
             <!-- Contenido principal -->
             <div class="container mt-5">
-                <h1 class="text-center">Agregar cliente</h1>
+                <h1 class="text-center">Agregar insumo</h1>
                 <!-- Aquí va el formulario u otra funcionalidad -->
-                <form id="clienteForm">
+                <form id="insumoForm">
                     <div class="mb-3">
-                        <label for="nombreCliente" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombreCliente"
-                            placeholder="Escribe el nombre del cliente" maxlength="30" required>
+                        <label for="stock" class="form-label">Stock</label>
+                        <input type="number" class="form-control" id="stock"
+                            placeholder="Escribe la cantidad de stock" maxlength="30" required>
                     </div>
                     <div class="mb-3">
-                        <label for="apellidosCliente" class="form-label">Apellidos</label>
-                        <input type="text" class="form-control" id="apellidosCliente"
-                            placeholder="Escribe los apellidos del cliente" maxlength="30" required>
+                        <label for="descripcion" class="form-label">Descripcion</label>
+                        <input type="text" class="form-control" id="descripcion"
+                            placeholder="Escribe una descripcion de el insumo" maxlength="30" required>
                     </div>
                     <div class="mb-3">
-                        <label for="correoCliente" class="form-label">Correo</label>
-                        <input type="email" class="form-control" id="correoCliente"
-                            placeholder="Escribe el correo del cliente" maxlength="70" required >
+                        <label for="status" class="form-label">Status</label>
+                        <input type="Boolean" class="form-control" id="status"
+                            placeholder="Escribe el status de el insumo" maxlength="70" required >
                     </div>
-                    <div class="mb-3">
-                        <label for="telefonoCliente" class="form-label">Teléfono</label>
-                        <input type="number" class="form-control" id="telefonoCliente"
-                            placeholder="Escribe el teléfono del cliente" maxlength="15" minlength="10" required pattern="^[0-9]{10}$">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Agregar cliente</button>
+                    <button type="submit" class="btn btn-primary">Agregar insumo</button>
                 </form>
             </div>
         </div>

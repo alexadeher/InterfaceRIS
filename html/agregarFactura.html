@@ -119,20 +119,26 @@
         <div class="bg-light">
             <!-- Contenido principal -->
             <div class="container mt-5">
-                <h1 class="text-center">Agregar categoría</h1>
+                <h1 class="text-center">Agregar Factura</h1>
                 <!-- Aquí va el formulario u otra funcionalidad -->
-                <form id="categoriaForm">
+                <form id="facturaForm">
+                    <!-- <div class="mb-3">
+                        <label for="fecha_factura" class="form-label">Fecha Factura</label>
+                        <input type="date" class="form-control" id="fecha_factura"
+                            placeholder="Escribe la fecha de la Factura" maxlength="30" required>
+                    </div>-->
                     <div class="mb-3">
-                        <label for="nombreCategoria" class="form-label">Nombre de la categoría</label>
-                        <input type="text" class="form-control" id="nombreCategoria"
-                            placeholder="Escribe el nombre de la categoría" maxlength="30" required>
+                        <label for="total" class="form-label">Total</label>
+                        <input type="number" class="form-control" id="total"
+                            placeholder="Escribe el total de la Factura" maxlength="30" required>
                     </div>
                     <div class="mb-3">
-                        <label for="descripcionCategoria" class="form-label">Descripción</label>
-                        <textarea class="form-control" id="descripcionCategoria" rows="3"
-                            placeholder="Escribe una descripción" maxlength="70" required></textarea>
+                        <label for="factura" class="form-label">Factura</label>
+                        <input type="text" class="form-control" id="factura"
+                            placeholder="Escribe la factura" maxlength="30" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Agregar categoría</button>
+                    
+                    <button type="submit" class="btn btn-primary">Agregar Factura</button>
                 </form>
             </div>
         </div>

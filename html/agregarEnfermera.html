@@ -125,49 +125,48 @@
         <div class="bg-light">
             <!-- Contenido principal -->
             <div class="container mt-5">
-                <h1 class="text-center">Agregar contrato</h1>
+                <h1 class="text-center">Agregar Enfermera</h1>
                 <!-- Aquí va el formulario u otra funcionalidad -->
-                <form id="contratoForm">
+                <form id="enfermeraForm">
                     <div class="mb-3">
-                        <label for="nombreContrato" class="form-label">Nombre del contrato</label>
-                        <input type="text" class="form-control" id="nombreContrato"
-                            placeholder="Escribe el nombre del contrato" maxlength="30">
+                        <label for="nombre" class="form-label">Nombre de la Enfermera</label>
+                        <input type="text" class="form-control" id="nombre"
+                            placeholder="Escribe el nombre de la Enfermera" maxlength="30">
                     </div>
                     <div class="mb-3">
-                        <label for="descripcionContrato" class="form-label">Descripción</label>
-                        <textarea class="form-control" id="descripcionContrato" rows="3"
-                            placeholder="Escribe una descripción" maxlength="70"></textarea>
+                        <label for="apellidos" class="form-label">Apellidos</label>
+                        <textarea class="form-control" id="apellidos" rows="1"
+                            placeholder="Escribe los apellidos de la enfermera" maxlength="30"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="fechaVencimientoContrato" class="form-label">Fecha de vencimiento del
-                            contrato</label>
-                        <div class="input-group">
-                            <input type="date" class="form-control datepicker" id="fechaVencimientoContrato"
-                                placeholder="Selecciona una fecha">
-                            <!--<span class="input-group-text"><i class="bi bi-calendar"></i></span>-->
-                            <!-- Icono de calendario -->
-                        </div>
+                        <label for="areaTrabajo" class="form-label">Area de Trabajo</label>
+                        <textarea class="form-control" id="areaTrabajo" rows="2"
+                            placeholder="Escribe el Area de Trabajo" maxlength="70"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="clienteContrato" class="form-label">Nombre del cliente del contrato</label>
-                        <select class="form-control" id="clienteContrato" name="clienteId">
-                            <option value="">Seleccionar cliente</option> <!-- Opción por defecto -->
-                            <!-- Opciones serán cargadas con JavaScript -->
+                        <label for="aniosExperiencia" class="form-label">Tiempo de Experiencia</label>
+                        <input type="number" class="form-control" id="aniosExperiencia"
+                            placeholder="Escribe los anos de Experiencia" maxlength="30">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre de la Enfermera</label>
+                        <input type="text" class="form-control" id="nombre"
+                            placeholder="Escribe el nombre de la Enfermera" maxlength="30">
+                    </div>
+                    <!-- <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="">Seleccionar Estado</option>
+                            <option value="TRUE">Inactivo</option>
+                            <option value="FALSE">Activo</option>
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="categoriaContrato" class="form-label">Nombre de la categoría del contrato</label>
-                        <select class="form-control" id="categoriaContrato" name="categoriaId">
-                            <option value="">Seleccionar categoría</option> <!-- Opción por defecto -->
-                            <!-- Opciones serán cargadas con JavaScript -->
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Agregar contrato</button>
+                    </div>-->
+                    <button type="submit" class="btn btn-primary">Agregar Enfermera</button>
                 </form>
             </div>
         </div>
 
-        <!-- ALERT para Mensaje de éxito o error -->
+         -->
         <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
 
 
