@@ -240,19 +240,18 @@
                             <li><a class="dropdown-item" href="consultarEnfermeras.html">Consultar/Actualizar</a></li>
                         </ul>
                     </div>
-                    <!-- Dropdown para Clientes 
+                    <!-- Dropdown para Usuarios -->
                     <div class="nav-item dropdown">
                         <a class="nav_link dropdown-toggle" href="#" id="dropdownClientes" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Clientes</span>
+                            <i class='bx bx-user nav_icon'></i> <span class="nav_name">Usuarios</span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownClientes">
-                            <li><a class="dropdown-item" href="agregarCliente.html">Agregar</a></li>
-                            <li><a class="dropdown-item" href="consultarClientes.html">Consultar/Actualizar</a></li>
+                            <li><a class="dropdown-item" href="consultarUsuarios.html">Consultar/Actualizar</a></li>
 
                         </ul>
-                    </div>-->
-                    <!-- Perfil y Cerrar sesión 
+                    </div>
+                    <!-- Perfil y Cerrar sesión -->
                     <div class="nav-item dropdown nav-profile">
                         <a class="nav_link dropdown-toggle" href="#" id="dropdownUser1" role="button"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -266,7 +265,7 @@
                             </li>
                             <li><a class="dropdown-item" href="#" onclick="logout(event)">Cerrar sesión</a></li>
                         </ul>
-                    </div>-->
+                    </div>
                 </div>
             </div>
         </nav>
@@ -276,10 +275,10 @@
     <div class="bg-light">
         <div class="container mt-5">
             <h1 class="text-center">Consultar Facturas</h1>
-            <div class="mb-3">
-                <label for="buscarActivas" class="form-label">Mostrar solo clientes activos:</label>
+           <!-- <div class="mb-3">
+                <label for="buscarActivas" class="form-label">Mostrar solo facturas activas:</label>
                 <input type="checkbox" id="buscarActivas">
-            </div>
+            </div> -->
             <table id="tablaClientes" class="display table table-striped">
                 <thead>
                     <tr>
@@ -414,7 +413,7 @@
                                     index + 1,
                                     factura.concepto,
                                     medicamentoNombre,
-                                    factura.total,
+                                    '$'+factura.total,
                                     factura.fecha_factura
                                 ]).draw();
                             });
@@ -424,11 +423,14 @@
             }
 
             cargarFacturas('http://localhost:8080/facturas/all');
+            $('#buscarActivas').on('change', function () {
+                cargarContratos(this.checked ? 'http://localhost:8080/contratos/actives' : 'http://localhost:8080/contratos/all');
+            });
 
         });
 
     </script>
-    <!--<script src="../js/access.js"></script> -->
+    <script src="../js/access.js"></script> 
     <script type='text/javascript'>var myLink = document.querySelector('a[href="#"]');
         myLink.addEventListener('click', function (e) {
             e.preventDefault();

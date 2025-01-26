@@ -39,7 +39,7 @@
                                 <li><a class="dropdown-item" href="consultarFacturas.html">Consultar</a></li>
                             </ul>
                         </div>
-    
+
                         <!-- Dropdown para medicamentos -->
                         <div class="nav-item dropdown">
                             <a class="nav_link dropdown-toggle" href="#" id="dropdownUsuarios" role="button"
@@ -48,7 +48,8 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownPerfil">
                                 <li><a class="dropdown-item" href="agregarMedicamento.html">Agregar</a></li>
-                                <li><a class="dropdown-item" href="consultarMedicamentos.html">Consultar/Actualizar</a></li>
+                                <li><a class="dropdown-item" href="consultarMedicamentos.html">Consultar/Actualizar</a>
+                                </li>
                             </ul>
                         </div>
                         <!-- Dropdown para insumos -->
@@ -81,22 +82,22 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
                                 <li><a class="dropdown-item" href="agregarEnfermera.html">Agregar</a></li>
-                                <li><a class="dropdown-item" href="consultarEnfermeras.html">Consultar/Actualizar</a></li>
+                                <li><a class="dropdown-item" href="consultarEnfermeras.html">Consultar/Actualizar</a>
+                                </li>
                             </ul>
                         </div>
-                        <!-- Dropdown para Clientes 
+                        <!-- Dropdown para Usuarios -->
                         <div class="nav-item dropdown">
                             <a class="nav_link dropdown-toggle" href="#" id="dropdownClientes" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Clientes</span>
+                                <i class='bx bx-bar-chart-alt-2 nav_icon'></i> <span class="nav_name">Usuarios</span>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownClientes">
-                                <li><a class="dropdown-item" href="agregarCliente.html">Agregar</a></li>
-                                <li><a class="dropdown-item" href="consultarClientes.html">Consultar/Actualizar</a></li>
-    
+                                <li><a class="dropdown-item" href="consultarUsuarios.html">Consultar/Actualizar</a></li>
+
                             </ul>
-                        </div>-->
-                        <!-- Perfil y Cerrar sesión 
+                        </div>
+                        <!-- Perfil y Cerrar sesión-->
                         <div class="nav-item dropdown nav-profile">
                             <a class="nav_link dropdown-toggle" href="#" id="dropdownUser1" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -104,13 +105,14 @@
                             </a>
                             <ul class="dropdown-menu aria-labelledby=" dropdownUser1">
                                 <li><a class="dropdown-item" href="verPerfil.html">Perfil</a></li>
-                                <li><a class="dropdown-item" href="cambiarContrasenaPerfil.html">Cambiar contraseña</a></li>
+                                <li><a class="dropdown-item" href="cambiarContrasenaPerfil.html">Cambiar contraseña</a>
+                                </li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
                                 <li><a class="dropdown-item" href="#" onclick="logout(event)">Cerrar sesión</a></li>
                             </ul>
-                        </div>-->
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -124,8 +126,8 @@
                 <form id="doctorForm">
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre:</label>
-                        <input type="text" class="form-control" id="nombre"
-                            placeholder="Escribe el nombre del doctor" maxlength="30" required>
+                        <input type="text" class="form-control" id="nombre" placeholder="Escribe el nombre del doctor"
+                            maxlength="30" required>
                     </div>
                     <div class="mb-3">
                         <label for="apellidos" class="form-label">Apellidos:</label>
@@ -134,18 +136,18 @@
                     </div>
                     <div class="mb-3">
                         <label for="cedula" class="form-label">Cédula:</label>
-                        <input type="text" class="form-control" id="cedula"
-                            placeholder="Escribe la cédula de el doctor" maxlength="70" required >
+                        <input type="text" class="form-control" id="cedula" placeholder="Escribe la cédula de el doctor"
+                            maxlength="70" required>
                     </div>
                     <div class="mb-3">
                         <label for="especialidad" class="form-label">Especialidad:</label>
-                        <input type="text" class="form-control" id="especialidad"
-                            placeholder="Escribe la especialidad" maxlength="70" required >
+                        <input type="text" class="form-control" id="especialidad" placeholder="Escribe la especialidad"
+                            maxlength="70" required>
                     </div>
                     <div class="mb-3">
                         <label for="consultorio" class="form-label">Consultorio:</label>
-                        <input type="text" class="form-control" id="consultorio"
-                            placeholder="Escribe el Consultorio" maxlength="70" required >
+                        <input type="text" class="form-control" id="consultorio" placeholder="Escribe el Consultorio"
+                            maxlength="70" required>
                     </div>
                     <div class="mb-3">
                         <label for="turno" class="form-label">Turno</label>
@@ -155,13 +157,13 @@
                             <option value="Vespertino">Vespertino</option>
                         </select>
                     </div>
-                    
+
                     <button type="submit" class="btn btn-primary">Agregar Doctor</button>
                 </form>
             </div>
         </div>
 
-        
+
         <!-- ALERT para Mensaje de éxito o error -->
         <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
 
@@ -287,7 +289,7 @@
 
 
         </script>
-        <!--<script src="../js/access.js"></script> -->
+        <script src="../js/access.js"></script> 
         <script type='text/javascript'>var myLink = document.querySelector('a[href="#"]');
             myLink.addEventListener('click', function (e) {
                 e.preventDefault();

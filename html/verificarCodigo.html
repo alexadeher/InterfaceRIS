@@ -20,7 +20,7 @@
                     <label for="code">Código de verificación</label>
                     <input type="text" id="code" name="code" placeholder="Ingrese el código" required>
                 </div>
-                
+
                 <button class="btn" type="submit">Verificar código</button>
                 <div class="form-element text-center">
                     <a href="login.html" class="link">Volver...</a>
@@ -28,10 +28,11 @@
             </form>
         </div>
     </div>
-
+    <!-- Mensaje de éxito o error -->
+    <div id="alerta" class="alert mt-3" role="alert" style="display: none;"></div>
     <script src="../js/passwordVisualizer.js"></script>
     <script>
-        document.getElementById("formVerification").addEventListener("submit", function(event) {
+        document.getElementById("formVerification").addEventListener("submit", function (event) {
             event.preventDefault();  // Evita que se recargue la página al enviar el formulario
 
             // Obtener el valor del código
@@ -44,23 +45,42 @@
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     correo: email,
-                    code: code }) 
+                    code: code
+                })
             })
-            .then(response => response.json())  // Procesamos la respuesta como JSON
-            .then(data => {
-                // Mostrar un mensaje de éxito o error dependiendo de la respuesta
-                alert(data.message);  // Muestra el mensaje del backend
-                if (data.type === "SUCCESS") {
-                    window.location.href = "cambiarContrasena.html";  // Redirige a la página para cambiar la contraseña
-                }
-            })
-            .catch(error => {
-                // En caso de que ocurra algún error con la solicitud
-                console.error("Error al verificar el código:", error);
-                alert("Hubo un error al verificar el código.");
-            });
+                .then(response => {
+                    if (!response.ok) {
+                        // Procesa la respuesta para obtener el mensaje de error
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.message || "Código incorrecto.");
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Si es exitoso, redirigir
+                    if (data.type === "SUCCESS") {
+                        window.location.href = "cambiarContrasena.html";
+                    }
+                })
+                .catch(error => {
+                    // Manejar errores mostrando un mensaje en pantalla
+                    console.error("Error al verificar el código:", error.message);
+
+                    const alerta = document.getElementById("alerta");
+                    alerta.textContent = error.message || "Ocurrió un error. Intente nuevamente.";
+                    alerta.className = "alert alert-danger";
+                    alerta.style.display = "block";
+
+                    // Ocultar la alerta después de 5 segundos
+                    setTimeout(() => {
+                        alerta.style.display = "none";
+                    }, 5000);
+                });
+
+
         });
     </script>
 
